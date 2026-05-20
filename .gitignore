@@ -35,6 +35,9 @@ yarn-error.log*
 .env.local
 .env*.local
 
+# PDFs reais com dados sensíveis (LGPD) — fixtures de teste local apenas
+tests/fixtures/pdfs/*.pdf
+
 # vercel
 .vercel
 
