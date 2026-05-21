@@ -58,53 +58,59 @@ export async function POST(request: Request) {
     }
   }
 
-  // Imports lazy — carregados apenas em runtime, nunca durante análise estática do build.
-  // @react-pdf/renderer e pdfjs-dist criam renderers React customizados ao ser importados;
-  // fazê-lo no nível de módulo corromperia o estado interno do React durante o prerender.
-  const [
-    { extractPdfHybrid },
-    { analyzeWithClaude },
-    { generateConformityReport },
-    { annotatePdf },
-    { findCitationPage },
-  ] = await Promise.all([
-    import('@/lib/pdf-extractor'),
-    import('@/lib/claude-analyzer'),
-    import('@/lib/report-generator'),
-    import('@/lib/pdf-annotator'),
-    import('@/lib/citation-matcher'),
-  ]);
-
-  const results = [];
-
-  for (const file of entries) {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
-
-    logger.info({ filename: file.name, sizeKb: Math.round(pdfBuffer.length / 1024) }, 'analyze_start');
-
-    const extracted = await extractPdfHybrid(pdfBuffer);
-    const analysis = await analyzeWithClaude(extracted.consolidatedText);
-
-    const allItems = [
-      ...analysis.regularidade_fiscal_trabalhista,
-      ...analysis.instrucao_processual,
-    ];
-    const annotations = buildAnnotations(allItems, extracted.pages, findCitationPage);
-    const [annotatedPdf, reportPdf] = await Promise.all([
-      annotatePdf(pdfBuffer, annotations),
-      generateConformityReport(analysis),
+  try {
+    // Imports lazy — carregados apenas em runtime, nunca durante análise estática do build.
+    // @react-pdf/renderer e pdfjs-dist criam renderers React customizados ao ser importados;
+    // fazê-lo no nível de módulo corromperia o estado interno do React durante o prerender.
+    const [
+      { extractPdfHybrid },
+      { analyzeWithClaude },
+      { generateConformityReport },
+      { annotatePdf },
+      { findCitationPage },
+    ] = await Promise.all([
+      import('@/lib/pdf-extractor'),
+      import('@/lib/claude-analyzer'),
+      import('@/lib/report-generator'),
+      import('@/lib/pdf-annotator'),
+      import('@/lib/citation-matcher'),
     ]);
 
-    logger.info({ filename: file.name, decisao: analysis.conclusao.decisao_geral }, 'analyze_done');
+    const results = [];
 
-    results.push({
-      filename: file.name,
-      analysis,
-      reportPdf: reportPdf.toString('base64'),
-      annotatedPdf: annotatedPdf.toString('base64'),
-    });
+    for (const file of entries) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfBuffer = Buffer.from(arrayBuffer);
+
+      logger.info({ filename: file.name, sizeKb: Math.round(pdfBuffer.length / 1024) }, 'analyze_start');
+
+      const extracted = await extractPdfHybrid(pdfBuffer);
+      const analysis = await analyzeWithClaude(extracted.consolidatedText);
+
+      const allItems = [
+        ...analysis.regularidade_fiscal_trabalhista,
+        ...analysis.instrucao_processual,
+      ];
+      const annotations = buildAnnotations(allItems, extracted.pages, findCitationPage);
+      const [annotatedPdf, reportPdf] = await Promise.all([
+        annotatePdf(pdfBuffer, annotations),
+        generateConformityReport(analysis),
+      ]);
+
+      logger.info({ filename: file.name, decisao: analysis.conclusao.decisao_geral }, 'analyze_done');
+
+      results.push({
+        filename: file.name,
+        analysis,
+        reportPdf: reportPdf.toString('base64'),
+        annotatedPdf: annotatedPdf.toString('base64'),
+      });
+    }
+
+    return NextResponse.json({ results });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    logger.error({ message }, 'analyze_error');
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  return NextResponse.json({ results });
 }

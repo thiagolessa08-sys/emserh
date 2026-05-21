@@ -42,8 +42,9 @@ export default function Home() {
       clearTimeout(stageTimeout3);
 
       if (!res.ok) {
-        const body = await res.json().catch(() => ({ error: res.statusText }));
-        throw new Error(body.error ?? `Erro ${res.status}`);
+        const body = await res.json().catch(() => ({ error: '' }));
+        // usa || (não ??) pois statusText é vazio em HTTP/2
+        throw new Error(body.error || `Erro HTTP ${res.status} — verifique os logs do servidor`);
       }
 
       const data = await res.json();
