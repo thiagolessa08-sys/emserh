@@ -123,10 +123,20 @@ export async function POST(request: Request) {
           const t1 = Date.now();
           progress(
             'analyzing',
-            `Analisando ${extracted.totalPages} página(s) com IA... (pode levar até 1 min)`,
+            `Analisando ${extracted.totalPages} página(s) com IA... (pode levar até 3 min)`,
           );
 
-          const analysis = await analyzeWithClaude(extracted.consolidatedText);
+          // Keepalive: envia ping SSE a cada 20s para evitar timeout do proxy
+          const keepalive = setInterval(() => {
+            try { controller.enqueue(encoder.encode(': ping\n\n')); } catch { /* stream fechado */ }
+          }, 20_000);
+
+          let analysis: Awaited<ReturnType<typeof analyzeWithClaude>>;
+          try {
+            analysis = await analyzeWithClaude(extracted.consolidatedText);
+          } finally {
+            clearInterval(keepalive);
+          }
           const analyzeMs = Date.now() - t1;
 
           logger.info(

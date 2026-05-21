@@ -93,6 +93,7 @@ function getApiKey(): string {
 async function callClaude(userPrompt: string): Promise<unknown> {
   const response = await fetch(ENDPOINT, {
     method: 'POST',
+    signal: AbortSignal.timeout(240_000), // 4 minutos máximo
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': getApiKey(),
