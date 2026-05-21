@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { Header } from '@/components/Header';
+import { Stepper } from '@/components/Stepper';
+import { Sidebar } from '@/components/Sidebar';
 import { UploadArea } from '@/components/UploadArea';
-import { ProgressIndicator, type AnalysisStage } from '@/components/ProgressIndicator';
 import { ResultPanel } from '@/components/ResultPanel';
 import type { AnalysisResult } from '@/lib/types';
+import type { AnalysisStage } from '@/components/ProgressIndicator';
 
 interface AnalysisResultEntry {
   filename: string;
@@ -15,7 +18,15 @@ interface AnalysisResultEntry {
 
 type SSEEvent =
   | { type: 'progress'; stage: AnalysisStage; message: string }
-  | { type: 'result'; results: Array<{ filename: string; analysis: AnalysisResult; reportPdf: string; annotatedPdf: string }> }
+  | {
+      type: 'result';
+      results: Array<{
+        filename: string;
+        analysis: AnalysisResult;
+        reportPdf: string;
+        annotatedPdf: string;
+      }>;
+    }
   | { type: 'error'; message: string };
 
 function formatSize(bytes: number): string {
@@ -23,40 +34,97 @@ function formatSize(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function formatTime(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}m ${s.toString().padStart(2, '0')}s`;
+}
+
+function BreadcrumbChevron() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path
+        d="M3.5 2L6.5 5L3.5 8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ArrowRight() {
+  return (
+    <svg className="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M3 8h10M9 4l4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function FileThumbnail() {
+  return (
+    <div className="file-thumb">
+      <div className="file-thumb-lines">
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
+      <span className="file-thumb-label">PDF</span>
+    </div>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path
+        d="M2 2l10 10M12 2L2 12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [stage, setStage] = useState<AnalysisStage>('idle');
   const [subMessage, setSubMessage] = useState<string | undefined>();
-  const [currentFile, setCurrentFile] = useState<string | undefined>();
   const [results, setResults] = useState<AnalysisResultEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [processingFiles, setProcessingFiles] = useState<File[]>([]);
   const startTimeRef = useRef<number | null>(null);
 
-  // Timer: inicia com 'extracting', para em 'done' ou 'error'
   useEffect(() => {
     if (stage === 'extracting') {
       startTimeRef.current = Date.now();
       setElapsedSeconds(0);
     }
-
     const isActive = stage !== 'idle' && stage !== 'done' && stage !== 'error';
     if (!isActive) return;
-
     const interval = setInterval(() => {
       if (startTimeRef.current !== null) {
         setElapsedSeconds(Math.round((Date.now() - startTimeRef.current) / 1000));
       }
     }, 500);
-
     return () => clearInterval(interval);
   }, [stage]);
 
   function handleFilesAdded(files: File[]) {
     setPendingFiles((prev) => {
       const existing = new Set(prev.map((f) => `${f.name}-${f.size}`));
-      const newFiles = files.filter((f) => !existing.has(`${f.name}-${f.size}`));
-      return [...prev, ...newFiles];
+      return [...prev, ...files.filter((f) => !existing.has(`${f.name}-${f.size}`))];
     });
   }
 
@@ -67,8 +135,10 @@ export default function Home() {
   async function handleStartAnalysis() {
     if (pendingFiles.length === 0) return;
     const files = [...pendingFiles];
+    setProcessingFiles(files);
     setPendingFiles([]);
     await runAnalysis(files);
+    setProcessingFiles([]);
   }
 
   async function runAnalysis(files: File[]) {
@@ -79,16 +149,14 @@ export default function Home() {
     const formData = new FormData();
     for (const f of files) formData.append('files', f);
 
-    setCurrentFile(files.length === 1 ? files[0].name : `${files.length} arquivos`);
     setStage('extracting');
 
     try {
       const res = await fetch('/api/analyze', { method: 'POST', body: formData });
 
-      // Erros de validação (400) chegam como JSON, não SSE
       if (!res.ok) {
         const body = await res.json().catch(() => ({ error: '' }));
-        throw new Error(body.error || `Erro HTTP ${res.status} — verifique os logs do servidor`);
+        throw new Error(body.error || `Erro HTTP ${res.status}`);
       }
 
       const reader = res.body!.getReader();
@@ -98,7 +166,6 @@ export default function Home() {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() ?? '';
@@ -143,110 +210,226 @@ export default function Home() {
   }
 
   const isProcessing = stage !== 'idle' && stage !== 'done' && stage !== 'error';
+  const stepperStep: 1 | 2 | 3 = stage === 'done' ? 3 : isProcessing ? 2 : 1;
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-[#1e3a5f] text-white px-6 py-4 shadow-md">
-        <div className="mx-auto max-w-4xl flex items-center gap-3">
-          <div className="text-3xl">🏥</div>
+    <>
+      <Header />
+      <main className="page">
+        {/* Page header — span 2 colunas */}
+        <div className="page-header">
           <div>
-            <h1 className="text-xl font-bold leading-tight">Auditor de Conformidade</h1>
-            <p className="text-xs opacity-70">
-              EMSERH — GCIF · Gerência de Controle Interno Financeiro
+            <div className="breadcrumb">
+              <span>GCIF</span>
+              <BreadcrumbChevron />
+              <span>Auditoria documental</span>
+              <BreadcrumbChevron />
+              <span>Nova análise</span>
+            </div>
+            <h1 className="page-title">
+              Submeta os documentos
+              <br />
+              para <em>análise de conformidade</em>
+            </h1>
+            <p className="page-sub">
+              Envie processos de pagamento, contratos e notas fiscais em PDF. O sistema
+              verifica os itens conforme a IN nº 03/2021 e devolve um relatório com as
+              não conformidades.
             </p>
           </div>
+          <Stepper step={stepperStep} />
         </div>
-      </header>
 
-      <div className="mx-auto max-w-4xl px-4 py-8 space-y-6">
-        {/* Upload */}
-        <section className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
-          <h2 className="mb-4 text-base font-semibold text-gray-700">
-            {pendingFiles.length > 0
-              ? 'Adicionar mais arquivos'
-              : 'Carregue o(s) processo(s) de pagamento em PDF'}
-          </h2>
-          <UploadArea onFilesSelected={handleFilesAdded} disabled={isProcessing} />
-        </section>
-
-        {/* Fila de arquivos pendentes */}
-        {pendingFiles.length > 0 && !isProcessing && (
-          <section className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-gray-700">
-                {pendingFiles.length} arquivo{pendingFiles.length > 1 ? 's' : ''} na fila
-              </h2>
-              <button
-                onClick={() => setPendingFiles([])}
-                className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                Limpar tudo
-              </button>
-            </div>
-
-            <ul className="mb-5 space-y-2">
-              {pendingFiles.map((f, i) => (
-                <li
-                  key={`${f.name}-${f.size}-${i}`}
-                  className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2"
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-xl shrink-0">📄</span>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-700 truncate">{f.name}</p>
-                      <p className="text-xs text-gray-400">{formatSize(f.size)}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => removePendingFile(i)}
-                    aria-label={`Remover ${f.name}`}
-                    className="ml-3 shrink-0 text-gray-300 hover:text-red-500 transition-colors text-lg leading-none"
-                  >
-                    ✕
-                  </button>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={handleStartAnalysis}
-              className="w-full rounded-xl bg-[#1e3a5f] py-3 text-white font-semibold hover:bg-[#163050] active:bg-[#0f2340] transition-colors"
-            >
-              Analisar {pendingFiles.length} arquivo{pendingFiles.length > 1 ? 's' : ''}
-            </button>
-          </section>
-        )}
-
-        {/* Progresso */}
-        {stage !== 'idle' && (
-          <section className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
-            <ProgressIndicator
-              stage={stage}
-              filename={currentFile}
-              subMessage={subMessage}
-              elapsedSeconds={elapsedSeconds}
-            />
-            {stage === 'error' && error && (
-              <div className="mt-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
-                <p className="text-sm font-semibold text-red-700 mb-1">Detalhe do erro:</p>
-                <p className="text-sm text-red-600 font-mono break-all">{error}</p>
+        {/* Coluna principal */}
+        <div className="main">
+          {/* Upload — visível apenas em idle/error */}
+          {!isProcessing && stage !== 'done' && (
+            <div className="card">
+              <div className="card-head">
+                <div className="card-title">
+                  Adicionar arquivos
+                  {pendingFiles.length > 0 && (
+                    <span className="count">{pendingFiles.length}</span>
+                  )}
+                </div>
               </div>
-            )}
-          </section>
-        )}
+              <div className="card-body">
+                <UploadArea onFilesSelected={handleFilesAdded} disabled={isProcessing} />
+              </div>
+            </div>
+          )}
 
-        {/* Resultados */}
-        {results.map((r) => (
-          <ResultPanel
-            key={r.filename}
-            filename={r.filename}
-            analysis={r.analysis}
-            reportPdfBase64={r.reportPdfBase64}
-            annotatedPdfBase64={r.annotatedPdfBase64}
-          />
-        ))}
-      </div>
-    </main>
+          {/* Fila de arquivos */}
+          {pendingFiles.length > 0 && !isProcessing && (
+            <div className="card">
+              <div className="card-head">
+                <div className="card-title">
+                  Fila de análise
+                  <span className="count">{pendingFiles.length}</span>
+                </div>
+                <button className="card-action" onClick={() => setPendingFiles([])}>
+                  Limpar tudo
+                </button>
+              </div>
+              <div className="card-body">
+                <div className="file-list">
+                  {pendingFiles.map((f, i) => (
+                    <div key={`${f.name}-${f.size}-${i}`} className="file-row">
+                      <FileThumbnail />
+                      <div className="file-info">
+                        <div className="file-name">{f.name}</div>
+                        <div className="file-meta">
+                          <span>{formatSize(f.size)}</span>
+                        </div>
+                      </div>
+                      <span className="file-status queued">Na fila</span>
+                      <button
+                        className="file-remove"
+                        aria-label={`Remover ${f.name}`}
+                        onClick={() => removePendingFile(i)}
+                      >
+                        <XIcon />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="submit-row">
+                  <button className="btn-primary" onClick={handleStartAnalysis}>
+                    Iniciar análise de {pendingFiles.length} arquivo
+                    {pendingFiles.length > 1 ? 's' : ''}
+                    <ArrowRight />
+                  </button>
+                  <button className="btn-secondary" onClick={() => setPendingFiles([])}>
+                    Limpar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Processando */}
+          {isProcessing && (
+            <div className="card">
+              <div className="card-head">
+                <div className="card-title">
+                  Processando
+                  <span className="count">
+                    <span className="spinner" />
+                  </span>
+                </div>
+                {elapsedSeconds > 0 && (
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      color: 'var(--em-muted)',
+                      fontFamily: 'var(--font-jetbrains-mono)',
+                    }}
+                  >
+                    {formatTime(elapsedSeconds)}
+                  </span>
+                )}
+              </div>
+              <div className="card-body">
+                <div className="file-list">
+                  {processingFiles.map((f) => (
+                    <div key={`${f.name}-${f.size}`} className="file-row analyzing">
+                      <FileThumbnail />
+                      <div className="file-info">
+                        <div className="file-name">{f.name}</div>
+                        <div className="file-meta">
+                          <span>{formatSize(f.size)}</span>
+                        </div>
+                        <div className="analyzing-bar">
+                          <div className="analyzing-bar-inner" />
+                        </div>
+                      </div>
+                      <span className="file-status processing">Analisando</span>
+                      <div />
+                    </div>
+                  ))}
+                </div>
+                {subMessage && (
+                  <p
+                    style={{
+                      marginTop: '14px',
+                      fontSize: '12.5px',
+                      color: 'var(--em-muted)',
+                    }}
+                  >
+                    {subMessage}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Erro */}
+          {stage === 'error' && error && (
+            <div className="card" style={{ borderColor: 'var(--err)' }}>
+              <div className="card-head">
+                <div className="card-title" style={{ color: 'var(--err)' }}>
+                  Erro na análise
+                </div>
+              </div>
+              <div className="card-body">
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--em-muted)',
+                    fontFamily: 'var(--font-jetbrains-mono)',
+                    wordBreak: 'break-all',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {error}
+                </p>
+                <button
+                  className="btn-secondary"
+                  style={{ marginTop: '14px' }}
+                  onClick={() => {
+                    setStage('idle');
+                    setError(null);
+                  }}
+                >
+                  ← Tentar novamente
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Resultados */}
+          {results.map((r) => (
+            <ResultPanel
+              key={r.filename}
+              filename={r.filename}
+              analysis={r.analysis}
+              reportPdfBase64={r.reportPdfBase64}
+              annotatedPdfBase64={r.annotatedPdfBase64}
+            />
+          ))}
+
+          {/* Nova análise */}
+          {stage === 'done' && (
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                setStage('idle');
+                setResults([]);
+                setPendingFiles([]);
+              }}
+            >
+              ← Nova análise
+            </button>
+          )}
+
+          <p className="footer-note">
+            Conforme <strong>IN EMSERH nº 03/2021</strong> — Uso exclusivo GCIF.
+          </p>
+        </div>
+
+        {/* Sidebar */}
+        <Sidebar />
+      </main>
+    </>
   );
 }

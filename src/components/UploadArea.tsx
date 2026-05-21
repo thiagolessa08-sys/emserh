@@ -8,7 +8,7 @@ interface UploadAreaProps {
 }
 
 export function UploadArea({ onFilesSelected, disabled = false }: UploadAreaProps) {
-  const [dragOver, setDragOver] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = useCallback(
@@ -17,53 +17,75 @@ export function UploadArea({ onFilesSelected, disabled = false }: UploadAreaProp
       const pdfs = Array.from(files).filter(
         (f) => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'),
       );
-      if (pdfs.length === 0) {
-        alert('Selecione apenas arquivos PDF.');
-        return;
-      }
-      onFilesSelected(pdfs);
+      if (pdfs.length > 0) onFilesSelected(pdfs);
     },
     [onFilesSelected],
   );
 
   return (
     <div
-      role="region"
-      aria-label="Área de upload de arquivos PDF"
+      role="button"
+      tabIndex={0}
+      aria-label="Área de upload de PDFs"
+      className={['dropzone', dragging ? 'dragging' : '', disabled ? 'dz-disabled' : '']
+        .filter(Boolean)
+        .join(' ')}
+      onClick={() => !disabled && inputRef.current?.click()}
+      onKeyDown={(e) => e.key === 'Enter' && !disabled && inputRef.current?.click()}
       onDragOver={(e) => {
         e.preventDefault();
-        if (!disabled) setDragOver(true);
+        if (!disabled) setDragging(true);
       }}
-      onDragLeave={() => setDragOver(false)}
+      onDragLeave={() => setDragging(false)}
       onDrop={(e) => {
         e.preventDefault();
-        setDragOver(false);
+        setDragging(false);
         if (!disabled) handleFiles(e.dataTransfer.files);
       }}
-      onClick={() => !disabled && inputRef.current?.click()}
-      className={[
-        'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-12 text-center transition-colors cursor-pointer select-none',
-        dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50',
-        disabled ? 'opacity-50 cursor-not-allowed' : '',
-      ].join(' ')}
     >
       <input
         ref={inputRef}
         type="file"
         accept=".pdf,application/pdf"
         multiple
-        className="hidden"
+        style={{ display: 'none' }}
         disabled={disabled}
         onChange={(e) => handleFiles(e.target.files)}
-        aria-hidden="true"
       />
-      <div className="text-5xl">📄</div>
-      <p className="text-lg font-medium text-gray-700">
-        Arraste os PDFs aqui ou clique para selecionar
+      <div className="dropzone-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path
+            d="M16 6V22M16 6L10 12M16 6L22 12"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M5 22V25C5 26.1046 5.89543 27 7 27H25C26.1046 27 27 26.1046 27 25V22"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+      <h3 className="dropzone-title">
+        Arraste os PDFs ou <span className="accent">clique para selecionar</span>
+      </h3>
+      <p className="dropzone-sub">
+        Aceita um ou mais arquivos · processos, empenhos, notas fiscais, contratos
       </p>
-      <p className="text-sm text-gray-400">
-        Suporta um ou mais arquivos PDF (máx. 50 MB cada)
-      </p>
+      <div className="dropzone-meta">
+        <span>
+          <span className="pill">PDF</span>
+        </span>
+        <span>
+          <span className="pill">máx. 50 MB</span>
+        </span>
+        <span>
+          <span className="pill">até 20 arquivos</span>
+        </span>
+      </div>
     </div>
   );
 }
