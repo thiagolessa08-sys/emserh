@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: [
+    '@react-pdf/renderer',
+    'pdfjs-dist',
+    'pdf-lib',
+    'canvas',
+  ],
 };
 
 export default nextConfig;
