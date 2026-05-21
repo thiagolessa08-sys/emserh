@@ -29,7 +29,7 @@ export async function ocrPagesViaMistral(
     signal: AbortSignal.timeout(120_000), // 2 minutos máximo
     body: JSON.stringify({
       model: 'mistral-ocr-latest',
-      document: { type: 'document_base64', data: base64 },
+      document: { type: 'document_url', document_url: `data:application/pdf;base64,${base64}` },
       pages: pageNumbers.map((p) => p - 1), // Mistral usa 0-indexed; envia todas de uma vez
     }),
   });
