@@ -24,7 +24,7 @@ function buildAnnotations(
     return {
       pageNumber,
       color: statusToColor(item.status),
-      label: `[${item.status}] ${item.descricao.slice(0, 60)}`,
+      label: `[${item.status}] ${item.descricao.slice(0, 90)}`,
     };
   });
 }

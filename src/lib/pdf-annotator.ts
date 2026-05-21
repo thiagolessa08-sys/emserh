@@ -7,9 +7,15 @@ export interface AnnotationRequest {
 }
 
 const COLOR_MAP = {
-  green: rgb(0.18, 0.72, 0.18),
-  red: rgb(0.88, 0.18, 0.18),
-  yellow: rgb(1.0, 0.85, 0.0),
+  green: rgb(0.06, 0.52, 0.06),
+  red: rgb(0.72, 0.06, 0.06),
+  yellow: rgb(0.80, 0.60, 0.0),
+};
+
+const TEXT_COLOR_MAP = {
+  green: rgb(1, 1, 1),
+  red: rgb(1, 1, 1),
+  yellow: rgb(0, 0, 0),
 };
 
 export async function annotatePdf(
@@ -17,7 +23,7 @@ export async function annotatePdf(
   annotations: AnnotationRequest[],
 ): Promise<Buffer> {
   const doc = await PDFDocument.load(new Uint8Array(pdfBuffer));
-  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const font = await doc.embedFont(StandardFonts.HelveticaBold);
   const pages = doc.getPages();
 
   for (const ann of annotations) {
@@ -25,25 +31,27 @@ export async function annotatePdf(
     if (!page) continue;
 
     const { width } = page.getSize();
-    const rectHeight = 20;
-    const rectY = 10;
+    const fontSize = 10;
+    const rectHeight = 30;
+    const rectY = 8;
     const color = COLOR_MAP[ann.color];
+    const textColor = TEXT_COLOR_MAP[ann.color];
 
     page.drawRectangle({
-      x: 10,
+      x: 8,
       y: rectY,
-      width: width - 20,
+      width: width - 16,
       height: rectHeight,
       color,
-      opacity: 0.4,
+      opacity: 0.92,
     });
 
     page.drawText(ann.label, {
       x: 14,
-      y: rectY + 5,
-      size: 9,
+      y: rectY + (rectHeight - fontSize) / 2,
+      size: fontSize,
       font,
-      color: rgb(0, 0, 0),
+      color: textColor,
     });
   }
 
