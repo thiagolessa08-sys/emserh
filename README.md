@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Auditor de Conformidade EMSERH
 
-## Getting Started
+Sistema web de auditoria automatizada de processos administrativos de pagamento da EMSERH — Empresa Maranhense de Serviços Hospitalares.
 
-First, run the development server:
+Analisa PDFs de processos de pagamento contra a checklist de 15 itens (7 de regularidade fiscal/trabalhista + 8 de instrução processual) e gera automaticamente o **Relatório de Conformidade** com o resultado da análise.
+
+## Funcionalidades
+
+- Upload de um ou mais PDFs (arraste ou clique)
+- Extração de texto nativo + OCR via Mistral para páginas escaneadas
+- Análise de conformidade com IA (Claude Sonnet) usando tool_use estruturado
+- Checklist de 15 itens com status CONFORME / NÃO CONFORME / ATENÇÃO
+- Geração do Relatório de Conformidade em PDF
+- PDF original anotado com marcações coloridas por item
+- Interface web responsiva com progresso em tempo real
+
+## Base Legal
+
+- Lei nº 13.303/2016 (Lei das Estatais)
+- Portaria nº 439/2024-GAB/EMSERH
+- Portaria nº 279/2025-GAB/EMSERH
+- RILC EMSERH 2024
+
+## Requisitos
+
+- Node.js 20+
+- Chave de API Anthropic (Claude Sonnet)
+- Chave de API Mistral (OCR)
+
+## Configuração Local
 
 ```bash
+# 1. Instalar dependências
+npm install
+
+# 2. Configurar variáveis de ambiente
+cp .env.example .env.local
+# Edite .env.local com suas chaves de API
+
+# 3. Iniciar servidor de desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Variáveis de Ambiente
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variável | Descrição | Obrigatória |
+|----------|-----------|-------------|
+| `ANTHROPIC_API_KEY` | Chave API Anthropic (Claude) | Sim |
+| `MISTRAL_API_KEY` | Chave API Mistral (OCR) | Sim |
+| `MISTRAL_OCR_ENDPOINT` | Endpoint OCR Mistral | Não (padrão: api.mistral.ai) |
 
-## Learn More
+## Deploy no Railway
 
-To learn more about Next.js, take a look at the following resources:
+1. Crie um projeto no [Railway](https://railway.app)
+2. Conecte ao repositório Git
+3. Configure as variáveis de ambiente (`ANTHROPIC_API_KEY`, `MISTRAL_API_KEY`)
+4. O deploy é automático via `railway.toml`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Health check disponível em `/api/health`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testes
 
-## Deploy on Vercel
+```bash
+npm test           # todos os testes
+npm run test:watch # modo watch
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+47 testes unitários cobrindo: extração nativa PDF, OCR Mistral, pipeline híbrido, normalização de texto, análise Claude, geração de relatório, anotação de PDF, endpoint HTTP.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Arquitetura
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── analyze/route.ts   # Endpoint principal POST /api/analyze
+│   │   └── health/route.ts    # Health check
+│   └── page.tsx               # UI principal (Client Component)
+├── components/
+│   ├── UploadArea.tsx          # Área de drag-and-drop
+│   ├── ProgressIndicator.tsx   # Barra de progresso por etapa
+│   └── ResultPanel.tsx         # Painel de resultado + checklists
+└── lib/
+    ├── types.ts                # Schemas Zod (fonte da verdade)
+    ├── logger.ts               # Logger com sanitização PII
+    ├── pdf-native-extractor.ts # Extração texto nativo (pdfjs-dist)
+    ├── ocr-mistral.ts          # OCR via Mistral API
+    ├── pdf-extractor.ts        # Orquestrador híbrido
+    ├── text-normalizer.ts      # Normalização de encoding
+    ├── date-utils.ts           # Validação de datas de validade
+    ├── prompt.ts               # System prompt + checklists EMSERH
+    ├── claude-analyzer.ts      # Cliente Claude + retry + Zod
+    ├── citation-matcher.ts     # Fuzzy matching citação→página
+    ├── pdf-annotator.ts        # Anotação PDF (pdf-lib)
+    └── report-generator.tsx    # Relatório de Conformidade (@react-pdf)
+```
+
+## LGPD
+
+- PDFs não são persistidos no servidor após a análise
+- Logs sanitizam campos sensíveis (paciente, CPF, CNS, nome)
+- Arquivos de fixture em `tests/fixtures/` são gitignored
