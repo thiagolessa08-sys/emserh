@@ -98,12 +98,14 @@ export async function POST(request: Request) {
             'analyze_start',
           );
 
-          // Etapa 1 — Extração de texto (+ OCR interno se houver páginas escaneadas)
+          // Etapas 1+2 — Extração de texto e OCR com progresso em tempo real
           const t0 = Date.now();
           const label = entries.length > 1 ? ` (${file.name})` : '';
           progress('extracting', `Extraindo texto do PDF${label}...`);
 
-          const extracted = await extractPdfHybrid(pdfBuffer);
+          const extracted = await extractPdfHybrid(pdfBuffer, (stage, message) => {
+            progress(stage, message);
+          });
           const extractMs = Date.now() - t0;
 
           logger.info(
@@ -116,14 +118,6 @@ export async function POST(request: Request) {
             },
             'step_extract_done',
           );
-
-          // Etapa 2 — OCR (informativo, já ocorreu dentro de extractPdfHybrid)
-          if (extracted.scannedPageCount > 0) {
-            progress(
-              'ocr',
-              `OCR processou ${extracted.scannedPageCount} de ${extracted.totalPages} página(s) escaneada(s).`,
-            );
-          }
 
           // Etapa 3 — Análise com Claude
           const t1 = Date.now();

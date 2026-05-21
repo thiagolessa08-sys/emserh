@@ -10,8 +10,14 @@ export interface HybridExtractionResult {
   consolidatedText: string;
 }
 
-export async function extractPdfHybrid(pdfBuffer: Buffer): Promise<HybridExtractionResult> {
-  const native = await extractNative(pdfBuffer);
+export async function extractPdfHybrid(
+  pdfBuffer: Buffer,
+  onProgress?: (stage: 'extracting' | 'ocr', message: string) => void,
+): Promise<HybridExtractionResult> {
+  const native = await extractNative(pdfBuffer, (current, total) => {
+    onProgress?.('extracting', `Extraindo texto... (pág. ${current}/${total})`);
+  });
+
   const scannedPageNumbers = native.pages.filter((p) => p.isScanned).map((p) => p.pageNumber);
   logger.info(
     { totalPages: native.totalPages, scanned: scannedPageNumbers.length },
@@ -20,7 +26,15 @@ export async function extractPdfHybrid(pdfBuffer: Buffer): Promise<HybridExtract
 
   let ocrResults: Record<number, string> = {};
   if (scannedPageNumbers.length > 0) {
+    onProgress?.(
+      'ocr',
+      `Enviando ${scannedPageNumbers.length} pág. escaneada(s) para OCR...`,
+    );
     ocrResults = await ocrPagesViaMistral(pdfBuffer, scannedPageNumbers);
+    onProgress?.(
+      'ocr',
+      `OCR concluído: ${scannedPageNumbers.length} pág. processada(s).`,
+    );
   }
 
   const pages = native.pages.map((p) => {

@@ -22,7 +22,10 @@ export interface NativeExtractionResult {
 
 const SCANNED_THRESHOLD_CHARS = 100;
 
-export async function extractNative(buffer: Buffer | Uint8Array): Promise<NativeExtractionResult> {
+export async function extractNative(
+  buffer: Buffer | Uint8Array,
+  onPage?: (current: number, total: number) => void,
+): Promise<NativeExtractionResult> {
   const data = buffer instanceof Buffer ? new Uint8Array(buffer) : buffer;
 
   // pdfjs-dist/legacy ainda aceita disableWorker em runtime; cast para contornar tipos v5
@@ -54,6 +57,9 @@ export async function extractNative(buffer: Buffer | Uint8Array): Promise<Native
       isScanned: text.length < SCANNED_THRESHOLD_CHARS,
       textItems: items,
     });
+
+    onPage?.(i, pdf.numPages);
   }
+
   return { pages, totalPages: pdf.numPages };
 }
