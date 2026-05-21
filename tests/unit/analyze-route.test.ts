@@ -72,7 +72,7 @@ vi.mock('@/lib/citation-matcher', () => ({
 async function makeRequest(files: Array<{ name: string; content: Buffer }>): Promise<Request> {
   const form = new FormData();
   for (const f of files) {
-    form.append('files', new Blob([f.content], { type: 'application/pdf' }), f.name);
+    form.append('files', new Blob([new Uint8Array(f.content)], { type: 'application/pdf' }), f.name);
   }
   return new Request('http://localhost/api/analyze', { method: 'POST', body: form });
 }

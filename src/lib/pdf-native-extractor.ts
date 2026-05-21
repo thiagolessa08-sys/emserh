@@ -22,23 +22,23 @@ export interface NativeExtractionResult {
 
 const SCANNED_THRESHOLD_CHARS = 100;
 
-interface PdfjsTextItem {
-  str: string;
-  transform: number[];
-  width: number;
-  height: number;
-}
-
 export async function extractNative(buffer: Buffer | Uint8Array): Promise<NativeExtractionResult> {
   const data = buffer instanceof Buffer ? new Uint8Array(buffer) : buffer;
-  const pdf = await pdfjsLib.getDocument({ data, disableWorker: true }).promise;
+
+  // pdfjs-dist/legacy ainda aceita disableWorker em runtime; cast para contornar tipos v5
+  const pdf = await pdfjsLib.getDocument({ data, disableWorker: true } as Parameters<typeof pdfjsLib.getDocument>[0]).promise;
   const pages: ExtractedPage[] = [];
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const items: TextItem[] = content.items
-      .filter((it): it is PdfjsTextItem => typeof (it as PdfjsTextItem).str === 'string')
+
+    // pdfjs v5: items é (TextItem | TextMarkedContent)[]; filtramos pelo campo 'str'
+    const items: TextItem[] = (content.items as Array<unknown>)
+      .filter(
+        (it): it is { str: string; transform: number[]; width: number; height: number } =>
+          typeof (it as { str?: unknown }).str === 'string',
+      )
       .map((it) => ({
         text: it.str,
         x: it.transform[4],
@@ -46,6 +46,7 @@ export async function extractNative(buffer: Buffer | Uint8Array): Promise<Native
         width: it.width,
         height: it.height,
       }));
+
     const text = items.map((it) => it.text).join(' ').replace(/\s+/g, ' ').trim();
     pages.push({
       pageNumber: i,
