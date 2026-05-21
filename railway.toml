@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm run build"
+buildCommand = "NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 npm run build"
 
 [deploy]
 startCommand = "npm start"
