@@ -9,6 +9,24 @@ import { ResultPanel } from '@/components/ResultPanel';
 import type { AnalysisResult } from '@/lib/types';
 import type { AnalysisStage } from '@/components/ProgressIndicator';
 
+const ANALYSIS_STEPS: { stage: AnalysisStage; label: string; desc: string }[] = [
+  { stage: 'extracting', label: 'Extração de texto', desc: 'Lendo e convertendo páginas do PDF' },
+  { stage: 'ocr', label: 'Reconhecimento OCR', desc: 'Processando páginas digitalizadas com OCR' },
+  { stage: 'analyzing', label: 'Análise de conformidade', desc: 'Verificando itens conforme a IN nº 03/2021' },
+  { stage: 'generating', label: 'Geração do relatório', desc: 'Criando PDF anotado e relatório de conformidade' },
+];
+
+const STAGE_ORDER: AnalysisStage[] = ['extracting', 'ocr', 'analyzing', 'generating'];
+
+function stageState(step: AnalysisStage, current: AnalysisStage): 'done' | 'active' | 'pending' {
+  const si = STAGE_ORDER.indexOf(step);
+  const ci = STAGE_ORDER.indexOf(current);
+  if (ci === -1) return 'pending';
+  if (si < ci) return 'done';
+  if (si === ci) return 'active';
+  return 'pending';
+}
+
 interface AnalysisResultEntry {
   filename: string;
   analysis: AnalysisResult;
@@ -330,6 +348,7 @@ export default function Home() {
                 )}
               </div>
               <div className="card-body">
+                {/* Arquivos sendo processados */}
                 <div className="file-list">
                   {processingFiles.map((f) => (
                     <div key={`${f.name}-${f.size}`} className="file-row analyzing">
@@ -343,22 +362,45 @@ export default function Home() {
                           <div className="analyzing-bar-inner" />
                         </div>
                       </div>
-                      <span className="file-status processing">Analisando</span>
+                      <span className="file-status processing">Em análise</span>
                       <div />
                     </div>
                   ))}
                 </div>
-                {subMessage && (
-                  <p
-                    style={{
-                      marginTop: '14px',
-                      fontSize: '12.5px',
-                      color: 'var(--em-muted)',
-                    }}
-                  >
-                    {subMessage}
-                  </p>
-                )}
+
+                {/* Rastreador de etapas */}
+                <div className="stage-list">
+                  {ANALYSIS_STEPS.map((s) => {
+                    const state = stageState(s.stage, stage);
+                    return (
+                      <div key={s.stage} className={`stage-item ${state}`}>
+                        <div className="stage-icon">
+                          {state === 'done' ? (
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path
+                                d="M3 8l3.5 3.5L13 5"
+                                stroke="white"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          ) : state === 'active' ? (
+                            <span className="spinner" />
+                          ) : (
+                            <span className="stage-dot" />
+                          )}
+                        </div>
+                        <div className="stage-text">
+                          <div className="stage-label">{s.label}</div>
+                          <div className="stage-desc">
+                            {state === 'active' && subMessage ? subMessage : s.desc}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
