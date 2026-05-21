@@ -5,7 +5,7 @@ import type { AnnotationRequest } from '@/lib/pdf-annotator';
 
 export const dynamic = 'force-dynamic';
 
-const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
+const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
 
 function statusToColor(status: string): 'green' | 'red' | 'yellow' {
   if (status === 'CONFORME') return 'green';
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     }
     if (file.size > MAX_FILE_SIZE_BYTES) {
       return NextResponse.json(
-        { error: `Arquivo "${file.name}" excede o limite de 50 MB.` },
+        { error: `Arquivo "${file.name}" excede o limite de 200 MB.` },
         { status: 400 },
       );
     }

@@ -80,7 +80,7 @@ export function UploadArea({ onFilesSelected, disabled = false }: UploadAreaProp
           <span className="pill">PDF</span>
         </span>
         <span>
-          <span className="pill">máx. 50 MB</span>
+          <span className="pill">máx. 200 MB</span>
         </span>
         <span>
           <span className="pill">até 20 arquivos</span>
