@@ -119,7 +119,12 @@ export function ResultPanel({
             <div key={item.item} className="finding">
               <div className={`finding-dot ${dotClass(item.status)}`} />
               <div>
-                <div className="finding-title">{item.descricao}</div>
+                <div className="finding-header">
+                  <div className="finding-title">{item.descricao}</div>
+                  {item.documento_verificador && (
+                    <span className="finding-ref">{item.documento_verificador}</span>
+                  )}
+                </div>
                 {item.motivo && <p className="finding-desc">{item.motivo}</p>}
                 {item.sugestao_correcao && (
                   <p
@@ -130,11 +135,6 @@ export function ResultPanel({
                   </p>
                 )}
               </div>
-              {item.documento_verificador ? (
-                <span className="finding-ref">{item.documento_verificador}</span>
-              ) : (
-                <div />
-              )}
             </div>
           ))}
         </div>
