@@ -18,6 +18,11 @@ type SSEEvent =
   | { type: 'result'; results: Array<{ filename: string; analysis: AnalysisResult; reportPdf: string; annotatedPdf: string }> }
   | { type: 'error'; message: string };
 
+function formatSize(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
 export default function Home() {
   const [stage, setStage] = useState<AnalysisStage>('idle');
   const [subMessage, setSubMessage] = useState<string | undefined>();
@@ -25,6 +30,7 @@ export default function Home() {
   const [results, setResults] = useState<AnalysisResultEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const startTimeRef = useRef<number | null>(null);
 
   // Timer: inicia com 'extracting', para em 'done' ou 'error'
@@ -46,7 +52,26 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [stage]);
 
-  async function handleFilesSelected(files: File[]) {
+  function handleFilesAdded(files: File[]) {
+    setPendingFiles((prev) => {
+      const existing = new Set(prev.map((f) => `${f.name}-${f.size}`));
+      const newFiles = files.filter((f) => !existing.has(`${f.name}-${f.size}`));
+      return [...prev, ...newFiles];
+    });
+  }
+
+  function removePendingFile(index: number) {
+    setPendingFiles((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  async function handleStartAnalysis() {
+    if (pendingFiles.length === 0) return;
+    const files = [...pendingFiles];
+    setPendingFiles([]);
+    await runAnalysis(files);
+  }
+
+  async function runAnalysis(files: File[]) {
     setResults([]);
     setError(null);
     setSubMessage(undefined);
@@ -138,10 +163,60 @@ export default function Home() {
         {/* Upload */}
         <section className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
           <h2 className="mb-4 text-base font-semibold text-gray-700">
-            Carregue o(s) processo(s) de pagamento em PDF
+            {pendingFiles.length > 0
+              ? 'Adicionar mais arquivos'
+              : 'Carregue o(s) processo(s) de pagamento em PDF'}
           </h2>
-          <UploadArea onFilesSelected={handleFilesSelected} disabled={isProcessing} />
+          <UploadArea onFilesSelected={handleFilesAdded} disabled={isProcessing} />
         </section>
+
+        {/* Fila de arquivos pendentes */}
+        {pendingFiles.length > 0 && !isProcessing && (
+          <section className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold text-gray-700">
+                {pendingFiles.length} arquivo{pendingFiles.length > 1 ? 's' : ''} na fila
+              </h2>
+              <button
+                onClick={() => setPendingFiles([])}
+                className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                Limpar tudo
+              </button>
+            </div>
+
+            <ul className="mb-5 space-y-2">
+              {pendingFiles.map((f, i) => (
+                <li
+                  key={`${f.name}-${f.size}-${i}`}
+                  className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-xl shrink-0">📄</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-700 truncate">{f.name}</p>
+                      <p className="text-xs text-gray-400">{formatSize(f.size)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removePendingFile(i)}
+                    aria-label={`Remover ${f.name}`}
+                    className="ml-3 shrink-0 text-gray-300 hover:text-red-500 transition-colors text-lg leading-none"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={handleStartAnalysis}
+              className="w-full rounded-xl bg-[#1e3a5f] py-3 text-white font-semibold hover:bg-[#163050] active:bg-[#0f2340] transition-colors"
+            >
+              Analisar {pendingFiles.length} arquivo{pendingFiles.length > 1 ? 's' : ''}
+            </button>
+          </section>
+        )}
 
         {/* Progresso */}
         {stage !== 'idle' && (
