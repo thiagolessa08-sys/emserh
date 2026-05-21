@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-import { extractPdfHybrid } from '@/lib/pdf-extractor';
-import { analyzeWithClaude } from '@/lib/claude-analyzer';
-import { generateConformityReport } from '@/lib/report-generator';
-import { annotatePdf, type AnnotationRequest } from '@/lib/pdf-annotator';
-import { findCitationPage } from '@/lib/citation-matcher';
-import type { ExtractedPage } from '@/lib/pdf-native-extractor';
 import { logger } from '@/lib/logger';
+import type { ExtractedPage } from '@/lib/pdf-native-extractor';
+import type { AnnotationRequest } from '@/lib/pdf-annotator';
+
+// Força rota dinâmica — nunca pré-renderizada
+export const dynamic = 'force-dynamic';
 
 const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
 
@@ -18,6 +17,7 @@ function statusToColor(status: string): 'green' | 'red' | 'yellow' {
 function buildAnnotations(
   allItems: Array<{ status: string; descricao: string; citacao: string; pagina_estimada: number }>,
   pages: ExtractedPage[],
+  findCitationPage: (citation: string, pages: Array<{ pageNumber: number; text: string }>) => number,
 ): AnnotationRequest[] {
   return allItems.map((item) => {
     const pageIndex = pages.map((p) => ({ pageNumber: p.pageNumber, text: p.text }));
@@ -58,6 +58,23 @@ export async function POST(request: Request) {
     }
   }
 
+  // Imports lazy — carregados apenas em runtime, nunca durante análise estática do build.
+  // @react-pdf/renderer e pdfjs-dist criam renderers React customizados ao ser importados;
+  // fazê-lo no nível de módulo corromperia o estado interno do React durante o prerender.
+  const [
+    { extractPdfHybrid },
+    { analyzeWithClaude },
+    { generateConformityReport },
+    { annotatePdf },
+    { findCitationPage },
+  ] = await Promise.all([
+    import('@/lib/pdf-extractor'),
+    import('@/lib/claude-analyzer'),
+    import('@/lib/report-generator'),
+    import('@/lib/pdf-annotator'),
+    import('@/lib/citation-matcher'),
+  ]);
+
   const results = [];
 
   for (const file of entries) {
@@ -73,7 +90,7 @@ export async function POST(request: Request) {
       ...analysis.regularidade_fiscal_trabalhista,
       ...analysis.instrucao_processual,
     ];
-    const annotations = buildAnnotations(allItems, extracted.pages);
+    const annotations = buildAnnotations(allItems, extracted.pages, findCitationPage);
     const [annotatedPdf, reportPdf] = await Promise.all([
       annotatePdf(pdfBuffer, annotations),
       generateConformityReport(analysis),
