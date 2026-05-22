@@ -4,7 +4,7 @@ import { logger } from '@/lib/logger';
 
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
-const MAX_TOKENS = 8192;
+const MAX_TOKENS = 16000;
 const RETRY_DELAYS_MS = [1000, 3000, 9000];
 
 const TOOL_DEFINITION = {
@@ -115,14 +115,24 @@ async function callClaude(userPrompt: string): Promise<unknown> {
   }
 
   const data = await response.json();
+
+  if (data.stop_reason === 'max_tokens') {
+    logger.error({ stop_reason: 'max_tokens', usage: data.usage }, 'claude_response_truncated');
+    throw new Error(
+      'A resposta do Claude foi cortada por exceder o limite de tokens. Tente um documento menor ou divida o processo em partes.',
+    );
+  }
+
   const toolUse = data.content?.find(
     (block: { type: string }) => block.type === 'tool_use',
   ) as { type: string; name: string; input: unknown } | undefined;
 
   if (!toolUse) {
+    logger.error({ stop_reason: data.stop_reason, content_types: data.content?.map((b: {type:string}) => b.type) }, 'claude_no_tool_use');
     throw new Error('Resposta do Claude não contém tool_use. Verifique o prompt e tool_choice.');
   }
 
+  logger.info({ stop_reason: data.stop_reason, usage: data.usage }, 'claude_tool_use_received');
   return toolUse.input;
 }
 
