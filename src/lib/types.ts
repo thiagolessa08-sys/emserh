@@ -18,13 +18,14 @@ export const IdentificacaoContratoSchema = z.object({
 export type IdentificacaoContrato = z.infer<typeof IdentificacaoContratoSchema>;
 
 const ChecklistItemBaseSchema = z.object({
-  item: z.number().int().min(1),
+  item: z.number().int(),
   descricao: z.string(),
   status: ChecklistItemStatus,
   motivo: z.string().nullable(),
   documento_verificador: z.string().nullable(),
   citacao: z.string(),
-  pagina_estimada: z.number().int().min(1),
+  // Claude às vezes devolve 0; normaliza para mínimo 1
+  pagina_estimada: z.number().int().transform((n) => Math.max(1, n)),
   observacoes: z.string(),
   sugestao_correcao: z.string().nullable(),
 });
@@ -49,8 +50,8 @@ export type Conclusao = z.infer<typeof ConclusaoSchema>;
 
 export const AnalysisResultSchema = z.object({
   identificacao_contrato: IdentificacaoContratoSchema,
-  regularidade_fiscal_trabalhista: z.array(RegularidadeItemSchema).length(7),
-  instrucao_processual: z.array(InstrucaoItemSchema).length(8),
+  regularidade_fiscal_trabalhista: z.array(RegularidadeItemSchema).min(1),
+  instrucao_processual: z.array(InstrucaoItemSchema).min(1),
   conclusao: ConclusaoSchema,
 });
 export type AnalysisResult = z.infer<typeof AnalysisResultSchema>;
