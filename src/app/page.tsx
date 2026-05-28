@@ -6,7 +6,8 @@ import { Stepper } from '@/components/Stepper';
 import { Sidebar } from '@/components/Sidebar';
 import { UploadArea } from '@/components/UploadArea';
 import { ResultPanel } from '@/components/ResultPanel';
-import type { AnalysisResult } from '@/lib/types';
+import { SegmentSelector } from '@/components/SegmentSelector';
+import type { AnalysisResult, SegmentoId, Modalidade } from '@/lib/types';
 import type { AnalysisStage } from '@/components/ProgressIndicator';
 
 const ANALYSIS_STEPS: { stage: AnalysisStage; label: string; desc: string }[] = [
@@ -122,6 +123,8 @@ export default function Home() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [processingFiles, setProcessingFiles] = useState<File[]>([]);
+  const [segmento, setSegmento] = useState<SegmentoId | ''>('');
+  const [modalidade, setModalidade] = useState<Modalidade>('contrato');
   const startTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -166,6 +169,8 @@ export default function Home() {
 
     const formData = new FormData();
     for (const f of files) formData.append('files', f);
+    formData.append('segmento', segmento || 'fornecedor');
+    formData.append('modalidade', modalidade);
 
     setStage('extracting');
 
@@ -260,6 +265,15 @@ export default function Home() {
 
         {/* Coluna principal */}
         <div className="main">
+          {/* Seletor de segmento — visível apenas em idle/error */}
+          {!isProcessing && stage !== 'done' && (
+            <SegmentSelector
+              segmento={segmento}
+              modalidade={modalidade}
+              onChange={(s, m) => { setSegmento(s); setModalidade(m); }}
+            />
+          )}
+
           {/* Upload — visível apenas em idle/error */}
           {!isProcessing && stage !== 'done' && (
             <div className="card">
@@ -272,7 +286,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="card-body">
-                <UploadArea onFilesSelected={handleFilesAdded} disabled={isProcessing} />
+                <UploadArea onFilesSelected={handleFilesAdded} disabled={isProcessing || !segmento} />
               </div>
             </div>
           )}
@@ -458,6 +472,8 @@ export default function Home() {
                 setStage('idle');
                 setResults([]);
                 setPendingFiles([]);
+                setSegmento('');
+                setModalidade('contrato');
               }}
             >
               ← Nova análise

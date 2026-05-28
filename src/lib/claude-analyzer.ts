@@ -1,4 +1,4 @@
-import { AnalysisResultSchema, type AnalysisResult } from '@/lib/types';
+import { AnalysisResultSchema, type AnalysisResult, type SegmentoId, type Modalidade } from '@/lib/types';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/prompt';
 import { logger } from '@/lib/logger';
 
@@ -6,6 +6,22 @@ const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 16000;
 const RETRY_DELAYS_MS = [1000, 3000, 9000];
+
+const CHECKLIST_ITEM_SCHEMA = {
+  type: 'object',
+  properties: {
+    item: { type: 'integer' },
+    descricao: { type: 'string' },
+    status: { type: 'string', enum: ['CONFORME', 'NAO_CONFORME', 'ATENCAO'] },
+    motivo: { type: ['string', 'null'] },
+    documento_verificador: { type: ['string', 'null'] },
+    citacao: { type: 'string' },
+    pagina_estimada: { type: 'integer' },
+    observacoes: { type: 'string' },
+    sugestao_correcao: { type: ['string', 'null'] },
+  },
+  required: ['item', 'descricao', 'status', 'motivo', 'documento_verificador', 'citacao', 'pagina_estimada', 'observacoes', 'sugestao_correcao'],
+};
 
 const TOOL_DEFINITION = {
   name: 'submit_analysis',
@@ -28,43 +44,18 @@ const TOOL_DEFINITION = {
       },
       regularidade_fiscal_trabalhista: {
         type: 'array',
-        minItems: 7,
-        maxItems: 7,
-        items: {
-          type: 'object',
-          properties: {
-            item: { type: 'integer' },
-            descricao: { type: 'string' },
-            status: { type: 'string', enum: ['CONFORME', 'NAO_CONFORME', 'ATENCAO'] },
-            motivo: { type: ['string', 'null'] },
-            documento_verificador: { type: ['string', 'null'] },
-            citacao: { type: 'string' },
-            pagina_estimada: { type: 'integer' },
-            observacoes: { type: 'string' },
-            sugestao_correcao: { type: ['string', 'null'] },
-            data_validade: { type: ['string', 'null'] },
-          },
-          required: ['item', 'descricao', 'status', 'motivo', 'documento_verificador', 'citacao', 'pagina_estimada', 'observacoes', 'sugestao_correcao', 'data_validade'],
-        },
+        minItems: 1,
+        items: CHECKLIST_ITEM_SCHEMA,
       },
       instrucao_processual: {
         type: 'array',
-        minItems: 8,
-        maxItems: 8,
+        minItems: 1,
         items: {
-          type: 'object',
+          ...CHECKLIST_ITEM_SCHEMA,
           properties: {
-            item: { type: 'integer' },
-            descricao: { type: 'string' },
-            status: { type: 'string', enum: ['CONFORME', 'NAO_CONFORME', 'ATENCAO'] },
-            motivo: { type: ['string', 'null'] },
-            documento_verificador: { type: ['string', 'null'] },
-            citacao: { type: 'string' },
-            pagina_estimada: { type: 'integer' },
-            observacoes: { type: 'string' },
-            sugestao_correcao: { type: ['string', 'null'] },
+            ...CHECKLIST_ITEM_SCHEMA.properties,
+            data_validade: { type: ['string', 'null'] },
           },
-          required: ['item', 'descricao', 'status', 'motivo', 'documento_verificador', 'citacao', 'pagina_estimada', 'observacoes', 'sugestao_correcao'],
         },
       },
       conclusao: {
@@ -90,10 +81,10 @@ function getApiKey(): string {
   return key;
 }
 
-async function callClaude(userPrompt: string): Promise<unknown> {
+async function callClaude(systemPrompt: string, userPrompt: string): Promise<unknown> {
   const response = await fetch(ENDPOINT, {
     method: 'POST',
-    signal: AbortSignal.timeout(240_000), // 4 minutos máximo
+    signal: AbortSignal.timeout(240_000),
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': getApiKey(),
@@ -102,7 +93,7 @@ async function callClaude(userPrompt: string): Promise<unknown> {
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      system: buildSystemPrompt(),
+      system: systemPrompt,
       tools: [TOOL_DEFINITION],
       tool_choice: { type: 'tool', name: 'submit_analysis' },
       messages: [{ role: 'user', content: userPrompt }],
@@ -118,9 +109,7 @@ async function callClaude(userPrompt: string): Promise<unknown> {
 
   if (data.stop_reason === 'max_tokens') {
     logger.error({ stop_reason: 'max_tokens', usage: data.usage }, 'claude_response_truncated');
-    throw new Error(
-      'A resposta do Claude foi cortada por exceder o limite de tokens. Tente um documento menor ou divida o processo em partes.',
-    );
+    throw new Error('A resposta do Claude foi cortada por exceder o limite de tokens. Tente um documento menor ou divida o processo em partes.');
   }
 
   const toolUse = data.content?.find(
@@ -128,22 +117,27 @@ async function callClaude(userPrompt: string): Promise<unknown> {
   ) as { type: string; name: string; input: unknown } | undefined;
 
   if (!toolUse) {
-    logger.error({ stop_reason: data.stop_reason, content_types: data.content?.map((b: {type:string}) => b.type) }, 'claude_no_tool_use');
-    throw new Error('Resposta do Claude não contém tool_use. Verifique o prompt e tool_choice.');
+    logger.error({ stop_reason: data.stop_reason, content_types: data.content?.map((b: { type: string }) => b.type) }, 'claude_no_tool_use');
+    throw new Error('Resposta do Claude não contém tool_use.');
   }
 
   logger.info({ stop_reason: data.stop_reason, usage: data.usage }, 'claude_tool_use_received');
   return toolUse.input;
 }
 
-export async function analyzeWithClaude(extractedText: string): Promise<AnalysisResult> {
-  const userPrompt = buildUserPrompt(extractedText);
+export async function analyzeWithClaude(
+  extractedText: string,
+  segmento: SegmentoId,
+  modalidade: Modalidade,
+): Promise<AnalysisResult> {
+  const systemPrompt = buildSystemPrompt(segmento, modalidade);
+  const userPrompt = buildUserPrompt(extractedText, segmento, modalidade);
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
     try {
-      logger.info({ attempt }, 'claude_analyze_attempt');
-      const raw = await callClaude(userPrompt);
+      logger.info({ attempt, segmento, modalidade }, 'claude_analyze_attempt');
+      const raw = await callClaude(systemPrompt, userPrompt);
       const parsed = AnalysisResultSchema.parse(raw);
       logger.info({ decisao: parsed.conclusao.decisao_geral }, 'claude_analyze_done');
       return parsed;

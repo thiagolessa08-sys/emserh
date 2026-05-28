@@ -1,5 +1,18 @@
 import { z } from 'zod';
 
+export const SEGMENTOS = [
+  { id: 'fornecedor',        label: 'Fornecedor (materiais / serviços)',      anexos: 'Anexo I + II',              modalidades: ['contrato', 'indenizatorio'] },
+  { id: 'cessao_mao_obra',   label: 'Cessão de Mão de Obra (terceirização)',  anexos: 'Anexo I + III',             modalidades: ['contrato', 'indenizatorio'] },
+  { id: 'engenharia',        label: 'Serviços de Engenharia',                  anexos: 'Anexo I + IV',              modalidades: ['contrato'] },
+  { id: 'servicos_medicos',  label: 'Serviços Médicos',                        anexos: 'Anexo I + V',               modalidades: ['contrato', 'indenizatorio'] },
+  { id: 'locacao_pf',        label: 'Locação de Imóvel — Pessoa Física',       anexos: 'Anexo VI Item 1',           modalidades: ['contrato'] },
+  { id: 'locacao_pj',        label: 'Locação de Imóvel — Pessoa Jurídica',     anexos: 'Anexo I + Anexo VI Item 2', modalidades: ['contrato'] },
+  { id: 'monopolio',         label: 'Monopólio / Locação em geral',            anexos: 'Apenas Anexo I',            modalidades: ['contrato'] },
+] as const;
+
+export type SegmentoId = typeof SEGMENTOS[number]['id'];
+export type Modalidade = 'contrato' | 'indenizatorio';
+
 export const ChecklistItemStatus = z.enum(['CONFORME', 'NAO_CONFORME', 'ATENCAO']);
 export type ChecklistItemStatus = z.infer<typeof ChecklistItemStatus>;
 

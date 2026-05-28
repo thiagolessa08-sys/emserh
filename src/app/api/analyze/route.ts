@@ -38,6 +38,9 @@ export async function POST(request: Request) {
   }
 
   const entries = formData.getAll('files') as File[];
+  const segmento = (formData.get('segmento') as string | null) ?? 'fornecedor';
+  const modalidade = (formData.get('modalidade') as string | null) ?? 'contrato';
+
   if (!entries || entries.length === 0) {
     return NextResponse.json({ error: 'Nenhum arquivo enviado. Use o campo "files".' }, { status: 400 });
   }
@@ -133,7 +136,11 @@ export async function POST(request: Request) {
 
           let analysis: Awaited<ReturnType<typeof analyzeWithClaude>>;
           try {
-            analysis = await analyzeWithClaude(extracted.consolidatedText);
+            analysis = await analyzeWithClaude(
+              extracted.consolidatedText,
+              segmento as import('@/lib/types').SegmentoId,
+              modalidade as import('@/lib/types').Modalidade,
+            );
           } finally {
             clearInterval(keepalive);
           }
