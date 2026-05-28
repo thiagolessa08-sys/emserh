@@ -44,7 +44,9 @@ const ChecklistItemBaseSchema = z.object({
 });
 
 export const RegularidadeItemSchema = ChecklistItemBaseSchema.extend({
-  data_validade: z.string().nullable(),
+  // nullish aceita string | null | undefined; undefined é normalizado para null
+  // (proteção caso o Claude omita o campo — é tratado como "data não encontrada")
+  data_validade: z.string().nullish().transform((v) => v ?? null),
 });
 export type RegularidadeItem = z.infer<typeof RegularidadeItemSchema>;
 
