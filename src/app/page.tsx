@@ -433,8 +433,9 @@ export default function Home() {
                     fontSize: '13px',
                     color: 'var(--em-muted)',
                     fontFamily: 'var(--font-jetbrains-mono)',
-                    wordBreak: 'break-all',
-                    lineHeight: 1.6,
+                    wordBreak: 'break-word',
+                    lineHeight: 1.7,
+                    whiteSpace: 'pre-wrap',
                   }}
                 >
                   {error}

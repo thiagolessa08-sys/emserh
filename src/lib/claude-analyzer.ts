@@ -1,6 +1,15 @@
+import { z } from 'zod';
 import { AnalysisResultSchema, type AnalysisResult, type SegmentoId, type Modalidade } from '@/lib/types';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/prompt';
 import { logger } from '@/lib/logger';
+
+function formatZodError(err: z.ZodError): string {
+  const lines = err.issues.map((issue) => {
+    const path = issue.path.join(' → ') || 'raiz';
+    return `• ${path}: ${issue.message}`;
+  });
+  return `A IA devolveu uma resposta com campos inválidos:\n${lines.join('\n')}\n\nTente novamente ou entre em contato com o suporte se o erro persistir.`;
+}
 
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
@@ -45,18 +54,19 @@ const TOOL_DEFINITION = {
       regularidade_fiscal_trabalhista: {
         type: 'array',
         minItems: 1,
-        items: CHECKLIST_ITEM_SCHEMA,
-      },
-      instrucao_processual: {
-        type: 'array',
-        minItems: 1,
         items: {
           ...CHECKLIST_ITEM_SCHEMA,
           properties: {
             ...CHECKLIST_ITEM_SCHEMA.properties,
             data_validade: { type: ['string', 'null'] },
           },
+          required: [...CHECKLIST_ITEM_SCHEMA.required, 'data_validade'],
         },
+      },
+      instrucao_processual: {
+        type: 'array',
+        minItems: 1,
+        items: CHECKLIST_ITEM_SCHEMA,
       },
       conclusao: {
         type: 'object',
@@ -138,7 +148,16 @@ export async function analyzeWithClaude(
     try {
       logger.info({ attempt, segmento, modalidade }, 'claude_analyze_attempt');
       const raw = await callClaude(systemPrompt, userPrompt);
-      const parsed = AnalysisResultSchema.parse(raw);
+      let parsed: AnalysisResult;
+      try {
+        parsed = AnalysisResultSchema.parse(raw);
+      } catch (zodErr) {
+        if (zodErr instanceof z.ZodError) {
+          logger.error({ issues: zodErr.issues }, 'claude_zod_validation_error');
+          throw new Error(formatZodError(zodErr));
+        }
+        throw zodErr;
+      }
       logger.info({ decisao: parsed.conclusao.decisao_geral }, 'claude_analyze_done');
       return parsed;
     } catch (err) {
