@@ -48,7 +48,17 @@ export function buildSystemPrompt(segmento: SegmentoId, modalidade: Modalidade):
   const nInstr = checklist.instrucao.length;
   const nTotal = nReg + nInstr;
 
+  // Data atual do servidor — usada para avaliar validade das certidões
+  const hoje = new Date().toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'America/Sao_Paulo',
+  });
+
   return `Você é um auditor especialista da GCIF (Gerência de Controle Interno Financeiro) da EMSERH — Empresa Maranhense de Serviços Hospitalares. Sua função é analisar processos administrativos de pagamento e verificar a conformidade com a checklist obrigatória baseada nas Portarias nº 439/2024 e nº 279/2025-GAB/EMSERH.
+
+DATA DE HOJE: ${hoje} — use esta data como referência para avaliar a validade de todas as certidões e documentos.
 
 SEGMENTO DO PROCESSO: ${segLabel} | Modalidade: ${modLabel}
 O checklist para este segmento tem ${nTotal} itens (${nReg} de regularidade fiscal/trabalhista + ${nInstr} de instrução processual).
