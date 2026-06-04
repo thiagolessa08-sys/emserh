@@ -238,6 +238,9 @@
   .finding-title { font-size: 13.5px; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; }
   .finding-desc { font-size: 12.5px; color: var(--em-muted); margin: 0; line-height: 1.5; }
   .finding-ref { font-family: var(--font-jetbrains-mono), monospace; font-size: 11px; color: var(--em-muted); background: var(--line-2); padding: 3px 8px; border-radius: 6px; white-space: normal; word-break: break-word; flex-shrink: 0; max-width: 200px; text-align: right; line-height: 1.4; }
+  .finding-validade { font-size: 11.5px; color: var(--em-muted); margin: 0 0 4px; font-family: var(--font-jetbrains-mono), monospace; }
+  .finding-validade strong { color: var(--ink-2); font-weight: 600; }
+  .findings-section-header { padding: 8px 16px; background: var(--paper-soft); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--em-muted); }
   .contract-id { background: var(--paper-soft); border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 16px; margin-bottom: 18px; }
   .contract-id-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 13px; }
   .contract-id-grid dt { color: var(--em-muted); font-weight: 500; white-space: nowrap; }

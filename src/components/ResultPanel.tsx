@@ -1,6 +1,6 @@
 'use client';
 
-import type { AnalysisResult, ChecklistItemStatus } from '@/lib/types';
+import type { AnalysisResult, ChecklistItemStatus, RegularidadeItem, InstrucaoItem } from '@/lib/types';
 
 function downloadBase64(base64: string, filename: string) {
   const link = document.createElement('a');
@@ -13,6 +13,41 @@ function dotClass(status: ChecklistItemStatus): string {
   if (status === 'CONFORME') return 'ok';
   if (status === 'NAO_CONFORME') return 'err';
   return 'warn';
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="findings-section-header">
+      {title}
+    </div>
+  );
+}
+
+function FindingRow({ item, dataValidade }: { item: RegularidadeItem | InstrucaoItem; dataValidade?: string | null }) {
+  return (
+    <div className="finding">
+      <div className={`finding-dot ${dotClass(item.status)}`} />
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div className="finding-header">
+          <div className="finding-title">{item.descricao}</div>
+          {item.documento_verificador && (
+            <span className="finding-ref">{item.documento_verificador}</span>
+          )}
+        </div>
+        {dataValidade && (
+          <p className="finding-validade">
+            Válido até: <strong>{dataValidade}</strong>
+          </p>
+        )}
+        {item.motivo && <p className="finding-desc">{item.motivo}</p>}
+        {item.sugestao_correcao && (
+          <p className="finding-desc" style={{ color: 'var(--warn)', marginTop: '4px' }}>
+            ► {item.sugestao_correcao}
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 interface ResultPanelProps {
@@ -29,10 +64,6 @@ export function ResultPanel({
   annotatedPdfBase64,
 }: ResultPanelProps) {
   const { identificacao_contrato: id, conclusao } = analysis;
-  const allItems = [
-    ...analysis.regularidade_fiscal_trabalhista,
-    ...analysis.instrucao_processual,
-  ];
 
   return (
     <div className="card">
@@ -101,41 +132,21 @@ export function ResultPanel({
 
         {/* Resumo */}
         {conclusao.resumo && (
-          <p
-            style={{
-              fontSize: '13.5px',
-              color: 'var(--ink-2)',
-              lineHeight: 1.6,
-              marginBottom: '18px',
-            }}
-          >
+          <p style={{ fontSize: '13.5px', color: 'var(--ink-2)', lineHeight: 1.6, marginBottom: '18px' }}>
             {conclusao.resumo}
           </p>
         )}
 
-        {/* Findings */}
+        {/* Regularidade fiscal / trabalhista */}
         <div className="findings">
-          {allItems.map((item) => (
-            <div key={item.item} className="finding">
-              <div className={`finding-dot ${dotClass(item.status)}`} />
-              <div>
-                <div className="finding-header">
-                  <div className="finding-title">{item.descricao}</div>
-                  {item.documento_verificador && (
-                    <span className="finding-ref">{item.documento_verificador}</span>
-                  )}
-                </div>
-                {item.motivo && <p className="finding-desc">{item.motivo}</p>}
-                {item.sugestao_correcao && (
-                  <p
-                    className="finding-desc"
-                    style={{ color: 'var(--warn)', marginTop: '4px' }}
-                  >
-                    ► {item.sugestao_correcao}
-                  </p>
-                )}
-              </div>
-            </div>
+          <SectionHeader title="Regularidade Fiscal e Trabalhista" />
+          {analysis.regularidade_fiscal_trabalhista.map((item) => (
+            <FindingRow key={item.item} item={item} dataValidade={item.data_validade} />
+          ))}
+
+          <SectionHeader title="Instrução Processual" />
+          {analysis.instrucao_processual.map((item) => (
+            <FindingRow key={item.item} item={item} />
           ))}
         </div>
 
@@ -143,17 +154,13 @@ export function ResultPanel({
         <div className="download-row">
           <button
             className="btn-dl-primary"
-            onClick={() =>
-              downloadBase64(reportPdfBase64, `relatorio-conformidade-${filename}`)
-            }
+            onClick={() => downloadBase64(reportPdfBase64, `relatorio-conformidade-${filename}`)}
           >
             ↓ Relatório de Conformidade
           </button>
           <button
             className="btn-dl-secondary"
-            onClick={() =>
-              downloadBase64(annotatedPdfBase64, `processo-anotado-${filename}`)
-            }
+            onClick={() => downloadBase64(annotatedPdfBase64, `processo-anotado-${filename}`)}
           >
             ↓ PDF Anotado
           </button>
