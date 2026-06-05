@@ -124,9 +124,26 @@ export async function POST(request: Request) {
 
           // Etapa 3 — Análise com Claude
           const t1 = Date.now();
+
+          // Trunca o texto se for muito longo (~150 k chars ≈ 37 k tokens de input)
+          // Deixa margem para o system prompt (~8 k tokens) e a resposta (16 k tokens)
+          const MAX_TEXT_CHARS = 150_000;
+          let consolidatedText = extracted.consolidatedText;
+          let truncated = false;
+          if (consolidatedText.length > MAX_TEXT_CHARS) {
+            consolidatedText = consolidatedText.slice(0, MAX_TEXT_CHARS);
+            truncated = true;
+            logger.warn(
+              { totalChars: extracted.consolidatedText.length, truncatedAt: MAX_TEXT_CHARS, pages: extracted.totalPages },
+              'text_truncated_before_claude',
+            );
+          }
+
           progress(
             'analyzing',
-            `Analisando ${extracted.totalPages} página(s) com IA... (pode levar até 3 min)`,
+            truncated
+              ? `Analisando ${extracted.totalPages} página(s) com IA... texto truncado em ${MAX_TEXT_CHARS.toLocaleString('pt-BR')} caracteres por segurança (pode levar até 5 min)`
+              : `Analisando ${extracted.totalPages} página(s) com IA... (pode levar até 3 min)`,
           );
 
           // Keepalive: envia ping SSE a cada 20s para evitar timeout do proxy
@@ -137,7 +154,7 @@ export async function POST(request: Request) {
           let analysis: Awaited<ReturnType<typeof analyzeWithClaude>>;
           try {
             analysis = await analyzeWithClaude(
-              extracted.consolidatedText,
+              consolidatedText,
               segmento as import('@/lib/types').SegmentoId,
               modalidade as import('@/lib/types').Modalidade,
             );

@@ -174,8 +174,12 @@ export default function Home() {
 
     setStage('extracting');
 
+    // Timeout global de 10 minutos no cliente
+    const clientAbort = new AbortController();
+    const clientTimeout = setTimeout(() => clientAbort.abort(), 10 * 60 * 1000);
+
     try {
-      const res = await fetch('/api/analyze', { method: 'POST', body: formData });
+      const res = await fetch('/api/analyze', { method: 'POST', body: formData, signal: clientAbort.signal });
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({ error: '' }));
@@ -227,8 +231,15 @@ export default function Home() {
       if (startTimeRef.current !== null) {
         setElapsedSeconds(Math.round((Date.now() - startTimeRef.current) / 1000));
       }
-      setError(err instanceof Error ? err.message : String(err));
+      const isAbort = err instanceof Error && err.name === 'AbortError';
+      setError(
+        isAbort
+          ? 'Tempo limite excedido (10 min). O documento pode ser grande demais — tente dividir o processo em partes menores e enviar separadamente.'
+          : (err instanceof Error ? err.message : String(err))
+      );
       setStage('error');
+    } finally {
+      clearTimeout(clientTimeout);
     }
   }
 
