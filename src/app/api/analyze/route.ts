@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       try {
         const [
           { extractPdfHybrid },
-          { analyzeWithClaude },
+          { analyzeProcess },
           { generateConformityReport },
           { annotatePdf },
           { findCitationPage },
@@ -122,41 +122,30 @@ export async function POST(request: Request) {
             'step_extract_done',
           );
 
-          // Etapa 3 — Análise com Claude
+          // Etapa 3 — Triagem + Análise com Claude
           const t1 = Date.now();
-
-          // Trunca o texto se for muito longo (~150 k chars ≈ 37 k tokens de input)
-          // Deixa margem para o system prompt (~8 k tokens) e a resposta (16 k tokens)
-          const MAX_TEXT_CHARS = 150_000;
-          let consolidatedText = extracted.consolidatedText;
-          let truncated = false;
-          if (consolidatedText.length > MAX_TEXT_CHARS) {
-            consolidatedText = consolidatedText.slice(0, MAX_TEXT_CHARS);
-            truncated = true;
-            logger.warn(
-              { totalChars: extracted.consolidatedText.length, truncatedAt: MAX_TEXT_CHARS, pages: extracted.totalPages },
-              'text_truncated_before_claude',
-            );
-          }
-
-          progress(
-            'analyzing',
-            truncated
-              ? `Analisando ${extracted.totalPages} página(s) com IA... texto truncado em ${MAX_TEXT_CHARS.toLocaleString('pt-BR')} caracteres por segurança (pode levar até 5 min)`
-              : `Analisando ${extracted.totalPages} página(s) com IA... (pode levar até 3 min)`,
-          );
+          progress('triaging', 'Triagem: localizando documentos nas páginas...');
 
           // Keepalive: envia ping SSE a cada 20s para evitar timeout do proxy
           const keepalive = setInterval(() => {
             try { controller.enqueue(encoder.encode(': ping\n\n')); } catch { /* stream fechado */ }
           }, 20_000);
 
-          let analysis: Awaited<ReturnType<typeof analyzeWithClaude>>;
+          let analysis: Awaited<ReturnType<typeof analyzeProcess>>;
           try {
-            analysis = await analyzeWithClaude(
-              consolidatedText,
+            analysis = await analyzeProcess(
+              extracted.pages,
               segmento as import('@/lib/types').SegmentoId,
               modalidade as import('@/lib/types').Modalidade,
+              {
+                triageChunk: (done, total) =>
+                  progress('triaging', `Triagem: ${done}/${total} blocos de páginas analisados...`),
+                onMessage: (message) => {
+                  // Quando a mensagem indica início da análise, muda o estágio
+                  const stage = message.startsWith('Analisando') ? 'analyzing' : 'triaging';
+                  progress(stage, message);
+                },
+              },
             );
           } finally {
             clearInterval(keepalive);

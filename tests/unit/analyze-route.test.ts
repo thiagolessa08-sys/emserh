@@ -83,16 +83,25 @@ describe('POST /api/analyze', () => {
     process.env.MISTRAL_API_KEY = 'test-key';
   });
 
-  it('retorna 200 com resultado da análise', async () => {
+  it('retorna 200 com resultado da análise (stream SSE)', async () => {
     const { POST } = await import('@/app/api/analyze/route');
     const req = await makeRequest([{ name: 'processo.pdf', content: Buffer.from('fake-pdf') }]);
     const res = await POST(req);
     expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.results).toHaveLength(1);
-    expect(body.results[0].filename).toBe('processo.pdf');
-    expect(body.results[0].analysis.conclusao.decisao_geral).toBe('CONFORME');
-    expect(body.results[0].reportPdf).toBeTruthy();
+
+    // A rota responde via Server-Sent Events: cada evento é uma linha "data: {...}"
+    const text = await res.text();
+    const events = text
+      .split('\n')
+      .filter((l) => l.startsWith('data: '))
+      .map((l) => JSON.parse(l.slice(6)));
+
+    const resultEvent = events.find((e) => e.type === 'result');
+    expect(resultEvent).toBeTruthy();
+    expect(resultEvent.results).toHaveLength(1);
+    expect(resultEvent.results[0].filename).toBe('processo.pdf');
+    expect(resultEvent.results[0].analysis.conclusao.decisao_geral).toBe('CONFORME');
+    expect(resultEvent.results[0].reportPdf).toBeTruthy();
   });
 
   it('retorna 400 quando nenhum arquivo enviado', async () => {
