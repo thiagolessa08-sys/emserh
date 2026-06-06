@@ -43,7 +43,10 @@ function formatZodError(err: z.ZodError): string {
   return `A IA devolveu uma resposta com campos inválidos:\n${lines.join('\n')}\n\nTente novamente ou entre em contato com o suporte se o erro persistir.`;
 }
 
-const ANALYSIS_MODEL = 'claude-sonnet-4-6';
+// Configura o modelo de análise via env var; fallback para Sonnet estável.
+// Para trocar sem redeploy de código: defina ANTHROPIC_ANALYSIS_MODEL no Railway.
+const ANALYSIS_MODEL =
+  process.env.ANTHROPIC_ANALYSIS_MODEL ?? 'claude-sonnet-4-6';
 const MAX_TOKENS = 16000;
 const RETRY_DELAYS_MS = [1000, 3000, 9000];
 const MAX_FOCUSED_CHARS = 180_000;

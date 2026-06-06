@@ -37,7 +37,10 @@ export function aggregateTriage(results: TriageChunkResult[]): TriageResult {
   return { relevantPages: [...set].sort((a, b) => a - b), pageTypes };
 }
 
-const TRIAGE_MODEL = 'claude-haiku-4-5';
+// Configura o modelo de triagem via env var; fallback para o Haiku mais estável.
+// Para trocar sem redeploy de código: defina ANTHROPIC_TRIAGE_MODEL no Railway.
+const TRIAGE_MODEL =
+  process.env.ANTHROPIC_TRIAGE_MODEL ?? 'claude-3-5-haiku-20241022';
 const CHUNK_SIZE = 40;
 const CONCURRENCY = 4;
 const TRIAGE_MAX_TOKENS = 4000;
