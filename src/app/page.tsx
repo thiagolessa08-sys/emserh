@@ -13,11 +13,12 @@ import type { AnalysisStage } from '@/components/ProgressIndicator';
 const ANALYSIS_STEPS: { stage: AnalysisStage; label: string; desc: string }[] = [
   { stage: 'extracting', label: 'Extração de texto', desc: 'Lendo e convertendo páginas do PDF' },
   { stage: 'ocr', label: 'Reconhecimento OCR', desc: 'Processando páginas digitalizadas com OCR' },
-  { stage: 'analyzing', label: 'Análise de conformidade', desc: 'Verificando itens conforme a IN nº 03/2021' },
+  { stage: 'triaging', label: 'Triagem de documentos', desc: 'Localizando as páginas relevantes do processo' },
+  { stage: 'analyzing', label: 'Análise de conformidade', desc: 'Verificando os itens do checklist do segmento' },
   { stage: 'generating', label: 'Geração do relatório', desc: 'Criando PDF anotado e relatório de conformidade' },
 ];
 
-const STAGE_ORDER: AnalysisStage[] = ['extracting', 'ocr', 'analyzing', 'generating'];
+const STAGE_ORDER: AnalysisStage[] = ['extracting', 'ocr', 'triaging', 'analyzing', 'generating'];
 
 function stageState(step: AnalysisStage, current: AnalysisStage): 'done' | 'active' | 'pending' {
   const si = STAGE_ORDER.indexOf(step);
