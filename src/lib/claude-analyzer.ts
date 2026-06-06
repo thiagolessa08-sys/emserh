@@ -8,10 +8,21 @@ import { triagePages } from '@/lib/triage';
 
 const COVER_PAGES = [1, 2, 3];
 
+// Limite por página: evita que documentos longos (Atas, Estatutos)
+// monopolizem o orçamento de caracteres e excluam certidões curtas.
+// Certidões/CND/CRF cabem facilmente em 4 000 chars; Atas têm muitas páginas
+// então o limite por página é suficiente para capturar o conteúdo relevante.
+const MAX_CHARS_PER_PAGE = 4_000;
+
 /**
  * Monta o texto focado para a análise: páginas de capa (1-3) + páginas
  * marcadas pela triagem. Se a triagem não retornou nada, usa todas as
- * páginas. Trunca no limite de caracteres por segurança.
+ * páginas.
+ *
+ * Cada página é truncada em MAX_CHARS_PER_PAGE para evitar que documentos
+ * muito longos (Atas, Estatutos, 60+ páginas) consumam todo o orçamento e
+ * excluam certidões curtas que aparecem mais adiante no processo.
+ * O total é limitado a maxChars.
  */
 export function selectRelevantPages(
   pages: ExtractedPage[],
@@ -26,13 +37,20 @@ export function selectRelevantPages(
     source = pages.filter((p) => wanted.has(p.pageNumber));
   }
 
-  const text = source
-    .slice()
-    .sort((a, b) => a.pageNumber - b.pageNumber)
-    .map((p) => `=== PÁGINA ${p.pageNumber} ===\n${p.text}`)
-    .join('\n\n');
+  const parts: string[] = [];
+  let total = 0;
 
-  return text.length > maxChars ? text.slice(0, maxChars) : text;
+  for (const p of source.slice().sort((a, b) => a.pageNumber - b.pageNumber)) {
+    const pageText = p.text.length > MAX_CHARS_PER_PAGE
+      ? p.text.slice(0, MAX_CHARS_PER_PAGE) + '\n[... página truncada ...]'
+      : p.text;
+    const block = `=== PÁGINA ${p.pageNumber} ===\n${pageText}`;
+    if (total + block.length > maxChars) break;
+    parts.push(block);
+    total += block.length + 2; // +2 pelo '\n\n' separador
+  }
+
+  return parts.join('\n\n');
 }
 
 function formatZodError(err: z.ZodError): string {
@@ -49,7 +67,7 @@ const ANALYSIS_MODEL =
   process.env.ANTHROPIC_ANALYSIS_MODEL ?? 'claude-sonnet-4-6';
 const MAX_TOKENS = 16000;
 const RETRY_DELAYS_MS = [1000, 3000, 9000];
-const MAX_FOCUSED_CHARS = 180_000;
+const MAX_FOCUSED_CHARS = 300_000;
 
 const CHECKLIST_ITEM_SCHEMA = {
   type: 'object',

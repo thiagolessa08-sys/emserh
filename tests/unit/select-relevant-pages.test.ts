@@ -29,8 +29,12 @@ describe('selectRelevantPages', () => {
     expect(text).toContain('=== PÁGINA 20 ===');
   });
 
-  it('trunca no limite de caracteres', () => {
+  it('para de incluir páginas quando o próximo bloco excederia o limite', () => {
+    // Cada bloco tem ~35 chars ("=== PÁGINA N ===\ntexto da pagina N").
+    // Com maxChars=50 só cabe 1 página (35 chars); a segunda empurraria para 72.
     const text = selectRelevantPages(pages, [], 50);
-    expect(text.length).toBe(50);
+    expect(text).toContain('=== PÁGINA 1 ===');
+    expect(text).not.toContain('=== PÁGINA 2 ===');
+    expect(text.length).toBeLessThanOrEqual(50);
   });
 });

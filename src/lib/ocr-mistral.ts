@@ -39,8 +39,13 @@ async function ocrBatch(
   if (!response.ok) {
     const body = await response.text();
     logger.error({ batch: batchIndex, status: response.status, body }, 'ocr_batch_error');
-    // Falha de lote não derruba tudo — retorna vazio para as páginas do lote
-    return {};
+    // Falha ALTA: melhor abortar com erro claro do que produzir um relatório
+    // enganoso (páginas sem texto viram falsos "documento não localizado").
+    const first = batchPageNumbers[0];
+    const last = batchPageNumbers[batchPageNumbers.length - 1];
+    throw new Error(
+      `Mistral OCR ${response.status} no lote de páginas ${first}-${last}: ${body}`,
+    );
   }
 
   const data: MistralOcrResponse = await response.json();
@@ -58,8 +63,8 @@ async function ocrBatch(
 /**
  * Envia páginas escaneadas para a Mistral OCR em lotes de OCR_BATCH_SIZE páginas.
  * Processos com centenas de páginas escaneadas não cabem em uma única chamada
- * (timeout, limite de payload). Lotes que falharem retornam vazio — as páginas
- * correspondentes ficam sem texto mas não derrubam a extração inteira.
+ * (timeout, limite de payload). Se um lote falhar, lança erro indicando as
+ * páginas afetadas — preferível a um relatório enganoso com documentos "ausentes".
  */
 export async function ocrPagesViaMistral(
   pdfBuffer: Buffer,
