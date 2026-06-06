@@ -3,6 +3,8 @@ import { AnalysisResultSchema, type AnalysisResult, type SegmentoId, type Modali
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/prompt';
 import { logger } from '@/lib/logger';
 import type { ExtractedPage } from '@/lib/pdf-native-extractor';
+import { callClaudeTool } from '@/lib/claude-client';
+import { triagePages } from '@/lib/triage';
 
 const COVER_PAGES = [1, 2, 3];
 
@@ -41,10 +43,10 @@ function formatZodError(err: z.ZodError): string {
   return `A IA devolveu uma resposta com campos inválidos:\n${lines.join('\n')}\n\nTente novamente ou entre em contato com o suporte se o erro persistir.`;
 }
 
-const ENDPOINT = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
+const ANALYSIS_MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 16000;
 const RETRY_DELAYS_MS = [1000, 3000, 9000];
+const MAX_FOCUSED_CHARS = 180_000;
 
 const CHECKLIST_ITEM_SCHEMA = {
   type: 'object',
@@ -115,69 +117,26 @@ const TOOL_DEFINITION = {
   },
 };
 
-function getApiKey(): string {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error('ANTHROPIC_API_KEY não configurada');
-  return key;
-}
-
-async function callClaude(systemPrompt: string, userPrompt: string): Promise<unknown> {
-  const response = await fetch(ENDPOINT, {
-    method: 'POST',
-    signal: AbortSignal.timeout(240_000),
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getApiKey(),
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      system: systemPrompt,
-      tools: [TOOL_DEFINITION],
-      tool_choice: { type: 'tool', name: 'submit_analysis' },
-      messages: [{ role: 'user', content: userPrompt }],
-    }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Claude API ${response.status}: ${body}`);
-  }
-
-  const data = await response.json();
-
-  if (data.stop_reason === 'max_tokens') {
-    logger.error({ stop_reason: 'max_tokens', usage: data.usage }, 'claude_response_truncated');
-    throw new Error('A resposta do Claude foi cortada por exceder o limite de tokens. Tente um documento menor ou divida o processo em partes.');
-  }
-
-  const toolUse = data.content?.find(
-    (block: { type: string }) => block.type === 'tool_use',
-  ) as { type: string; name: string; input: unknown } | undefined;
-
-  if (!toolUse) {
-    logger.error({ stop_reason: data.stop_reason, content_types: data.content?.map((b: { type: string }) => b.type) }, 'claude_no_tool_use');
-    throw new Error('Resposta do Claude não contém tool_use.');
-  }
-
-  logger.info({ stop_reason: data.stop_reason, usage: data.usage }, 'claude_tool_use_received');
-  return toolUse.input;
-}
-
-export async function analyzeWithClaude(
-  extractedText: string,
+export async function runAnalysisOnText(
+  focusedText: string,
   segmento: SegmentoId,
   modalidade: Modalidade,
 ): Promise<AnalysisResult> {
   const systemPrompt = buildSystemPrompt(segmento, modalidade);
-  const userPrompt = buildUserPrompt(extractedText, segmento, modalidade);
+  const userPrompt = buildUserPrompt(focusedText, segmento, modalidade);
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
     try {
       logger.info({ attempt, segmento, modalidade }, 'claude_analyze_attempt');
-      const raw = await callClaude(systemPrompt, userPrompt);
+      const raw = await callClaudeTool({
+        model: ANALYSIS_MODEL,
+        system: systemPrompt,
+        user: userPrompt,
+        tool: TOOL_DEFINITION,
+        maxTokens: MAX_TOKENS,
+      });
+
       let parsed: AnalysisResult;
       try {
         parsed = AnalysisResultSchema.parse(raw);
@@ -209,4 +168,42 @@ export async function analyzeWithClaude(
     throw new Error(lastError.message.slice('__ZOD__'.length));
   }
   throw lastError ?? new Error('Falha desconhecida na análise Claude');
+}
+
+export interface AnalyzeProgress {
+  triageChunk?: (done: number, total: number) => void;
+  onMessage?: (message: string) => void;
+}
+
+/**
+ * Pipeline completo: triagem (Haiku, paralelo) → seleção de páginas →
+ * análise (Sonnet). Se a triagem falhar, faz fallback para analisar todo
+ * o documento truncado, garantindo que o app nunca quebre.
+ */
+export async function analyzeProcess(
+  pages: ExtractedPage[],
+  segmento: SegmentoId,
+  modalidade: Modalidade,
+  progress?: AnalyzeProgress,
+): Promise<AnalysisResult> {
+  let relevantPages: number[] = [];
+  try {
+    progress?.onMessage?.('Triagem: localizando documentos nas páginas...');
+    const triage = await triagePages(pages, segmento, modalidade, (done, total) => {
+      progress?.triageChunk?.(done, total);
+    });
+    relevantPages = triage.relevantPages;
+  } catch (err) {
+    logger.warn(
+      { err: err instanceof Error ? err.message : String(err) },
+      'triage_failed_fallback',
+    );
+    relevantPages = []; // fallback dentro de selectRelevantPages
+  }
+
+  const focusedText = selectRelevantPages(pages, relevantPages, MAX_FOCUSED_CHARS);
+  const qtd = relevantPages.length > 0 ? `${relevantPages.length} página(s) relevante(s)` : 'todo o documento';
+  progress?.onMessage?.(`Analisando ${qtd} com IA...`);
+
+  return runAnalysisOnText(focusedText, segmento, modalidade);
 }

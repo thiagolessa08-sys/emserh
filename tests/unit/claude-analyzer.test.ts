@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { analyzeWithClaude } from '@/lib/claude-analyzer';
+import { runAnalysisOnText } from '@/lib/claude-analyzer';
 
 const VALID_RESULT = {
   identificacao_contrato: {
@@ -59,7 +59,7 @@ function makeApiResponse(result: unknown) {
   };
 }
 
-describe('analyzeWithClaude', () => {
+describe('runAnalysisOnText', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
     process.env.ANTHROPIC_API_KEY = 'test-key';
@@ -67,7 +67,7 @@ describe('analyzeWithClaude', () => {
 
   it('retorna AnalysisResult validado quando Claude responde corretamente', async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(makeApiResponse(VALID_RESULT));
-    const result = await analyzeWithClaude('texto do processo');
+    const result = await runAnalysisOnText('texto do processo', 'fornecedor', 'contrato');
     expect(result.identificacao_contrato.credor).toBe('Empresa Teste Ltda');
     expect(result.regularidade_fiscal_trabalhista).toHaveLength(7);
     expect(result.instrucao_processual).toHaveLength(8);
@@ -79,31 +79,32 @@ describe('analyzeWithClaude', () => {
     fetchMock
       .mockResolvedValueOnce({ ok: false, status: 529, text: async () => 'overloaded' })
       .mockResolvedValueOnce(makeApiResponse(VALID_RESULT));
-    const result = await analyzeWithClaude('texto');
+    const result = await runAnalysisOnText('texto', 'fornecedor', 'contrato');
     expect(result.conclusao.decisao_geral).toBe('CONFORME');
     expect(fetchMock.mock.calls.length).toBe(2);
   });
 
-  it('lança erro após 3 tentativas sem sucesso', async () => {
+  it('lança erro quando recebe status não-retentável (500)', async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: false,
       status: 500,
       text: async () => 'Internal Server Error',
     });
-    await expect(analyzeWithClaude('texto')).rejects.toThrow(/500/);
+    await expect(runAnalysisOnText('texto', 'fornecedor', 'contrato')).rejects.toThrow(/500/);
   });
 
+  // Erros de schema são retentáveis (1+3+9s entre tentativas), por isso o timeout maior
   it('lança erro de validação Zod quando Claude retorna JSON inválido', async () => {
     const invalid = { ...VALID_RESULT, regularidade_fiscal_trabalhista: [] };
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(makeApiResponse(invalid));
-    await expect(analyzeWithClaude('texto')).rejects.toThrow();
-  });
+    await expect(runAnalysisOnText('texto', 'fornecedor', 'contrato')).rejects.toThrow();
+  }, 20000);
 
   it('lança erro quando resposta não contém tool_use', async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => ({ content: [{ type: 'text', text: 'desculpe' }] }),
     });
-    await expect(analyzeWithClaude('texto')).rejects.toThrow(/tool_use/);
+    await expect(runAnalysisOnText('texto', 'fornecedor', 'contrato')).rejects.toThrow(/tool_use/);
   });
 });
