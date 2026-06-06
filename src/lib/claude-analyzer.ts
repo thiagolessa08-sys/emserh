@@ -2,6 +2,36 @@ import { z } from 'zod';
 import { AnalysisResultSchema, type AnalysisResult, type SegmentoId, type Modalidade } from '@/lib/types';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/prompt';
 import { logger } from '@/lib/logger';
+import type { ExtractedPage } from '@/lib/pdf-native-extractor';
+
+const COVER_PAGES = [1, 2, 3];
+
+/**
+ * Monta o texto focado para a análise: páginas de capa (1-3) + páginas
+ * marcadas pela triagem. Se a triagem não retornou nada, usa todas as
+ * páginas. Trunca no limite de caracteres por segurança.
+ */
+export function selectRelevantPages(
+  pages: ExtractedPage[],
+  relevantPageNumbers: number[],
+  maxChars: number,
+): string {
+  let source: ExtractedPage[];
+  if (relevantPageNumbers.length === 0) {
+    source = pages; // fallback: todo o documento
+  } else {
+    const wanted = new Set<number>([...COVER_PAGES, ...relevantPageNumbers]);
+    source = pages.filter((p) => wanted.has(p.pageNumber));
+  }
+
+  const text = source
+    .slice()
+    .sort((a, b) => a.pageNumber - b.pageNumber)
+    .map((p) => `=== PÁGINA ${p.pageNumber} ===\n${p.text}`)
+    .join('\n\n');
+
+  return text.length > maxChars ? text.slice(0, maxChars) : text;
+}
 
 function formatZodError(err: z.ZodError): string {
   const lines = err.issues.map((issue) => {
