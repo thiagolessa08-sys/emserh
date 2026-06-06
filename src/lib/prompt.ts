@@ -82,7 +82,8 @@ INSTRUÇÕES DE ANÁLISE:
 4. Se um item não encontrar evidência no processo, classifique como NAO_CONFORME com motivo "Documento não localizado no processo".
 5. Para itens de regularidade com data de validade, extraia a data e avalie se está vigente.
 6. A decisão final (conclusao.decisao_geral) deve refletir o conjunto de todos os itens avaliados.
-7. Responda SOMENTE com o JSON estruturado via tool call — nenhum texto fora da tool call.`;
+7. Responda SOMENTE com o JSON estruturado via tool call — nenhum texto fora da tool call.
+8. IMPORTANTE: "regularidade_fiscal_trabalhista" e "instrucao_processual" devem ser ARRAYS de objetos, nunca strings.`;
 }
 
 export function buildUserPrompt(extractedText: string, segmento: SegmentoId, modalidade: Modalidade): string {

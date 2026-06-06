@@ -153,8 +153,9 @@ export async function analyzeWithClaude(
         parsed = AnalysisResultSchema.parse(raw);
       } catch (zodErr) {
         if (zodErr instanceof z.ZodError) {
-          logger.error({ issues: zodErr.issues }, 'claude_zod_validation_error');
-          throw new Error(formatZodError(zodErr));
+          logger.error({ issues: zodErr.issues, attempt }, 'claude_zod_validation_error');
+          // Erros de schema são retentáveis — Claude às vezes devolve tipo errado
+          throw new Error(`__ZOD__${formatZodError(zodErr)}`);
         }
         throw zodErr;
       }
@@ -165,12 +166,17 @@ export async function analyzeWithClaude(
       const isRetryable =
         lastError.message.includes('529') ||
         lastError.message.includes('503') ||
-        lastError.message.includes('overloaded');
+        lastError.message.includes('overloaded') ||
+        lastError.message.startsWith('__ZOD__'); // schema inválido → retry
       if (!isRetryable || attempt >= RETRY_DELAYS_MS.length) break;
       logger.warn({ attempt, delay: RETRY_DELAYS_MS[attempt] }, 'claude_analyze_retry');
       await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
     }
   }
 
+  // Remove prefixo interno antes de expor ao usuário
+  if (lastError?.message.startsWith('__ZOD__')) {
+    throw new Error(lastError.message.slice('__ZOD__'.length));
+  }
   throw lastError ?? new Error('Falha desconhecida na análise Claude');
 }
