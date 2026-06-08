@@ -143,6 +143,18 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [stage]);
 
+  function resetToHome() {
+    if (isProcessing) return; // não interrompe uma análise em andamento
+    setStage('idle');
+    setResults([]);
+    setPendingFiles([]);
+    setProcessingFiles([]);
+    setSegmento('');
+    setModalidade('contrato');
+    setError(null);
+    setSubMessage(undefined);
+  }
+
   function handleFilesAdded(files: File[]) {
     setPendingFiles((prev) => {
       const existing = new Set(prev.map((f) => `${f.name}-${f.size}`));
@@ -249,7 +261,7 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      <Header onLogoClick={resetToHome} />
       <main className="page">
         {/* Page header — span 2 colunas */}
         <div className="page-header">
@@ -479,16 +491,7 @@ export default function Home() {
 
           {/* Nova análise */}
           {stage === 'done' && (
-            <button
-              className="btn-secondary"
-              onClick={() => {
-                setStage('idle');
-                setResults([]);
-                setPendingFiles([]);
-                setSegmento('');
-                setModalidade('contrato');
-              }}
-            >
+            <button className="btn-secondary" onClick={resetToHome}>
               ← Nova análise
             </button>
           )}

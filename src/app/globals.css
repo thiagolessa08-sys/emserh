@@ -112,7 +112,9 @@
   /* ===== Header ===== */
   .header { background: var(--paper); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 50; }
   .header-inner { max-width: 1200px; margin: 0 auto; padding: 18px 32px; display: flex; align-items: center; gap: 24px; }
-  .brand { display: flex; align-items: center; gap: 18px; }
+  .brand { display: flex; align-items: center; gap: 18px; background: none; border: 0; padding: 0; margin: 0; font: inherit; text-align: left; cursor: pointer; border-radius: 8px; transition: opacity 0.15s; }
+  .brand:hover { opacity: 0.75; }
+  .brand:focus-visible { outline: 2px solid var(--emserh-navy); outline-offset: 4px; }
   .brand img { height: 38px; width: auto; display: block; }
   .brand-divider { width: 1px; height: 36px; background: var(--line); flex-shrink: 0; }
   .brand-meta { display: flex; flex-direction: column; gap: 2px; }
