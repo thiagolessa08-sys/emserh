@@ -1,4 +1,4 @@
-import { getSegmentChecklist, getSegmentLabel, type ChecklistItem } from '@/lib/segment-rules';
+import { getSegmentLabel, type SegmentChecklist, type ChecklistItem } from '@/lib/segment-rules';
 import type { SegmentoId, Modalidade } from '@/lib/types';
 
 const KNOWN_VARIANTS = `
@@ -40,8 +40,7 @@ function formatItems(items: ChecklistItem[]): string {
     .join('\n\n');
 }
 
-export function buildSystemPrompt(segmento: SegmentoId, modalidade: Modalidade): string {
-  const checklist = getSegmentChecklist(segmento, modalidade);
+export function buildSystemPrompt(checklist: SegmentChecklist, segmento: SegmentoId, modalidade: Modalidade): string {
   const segLabel = getSegmentLabel(segmento);
   const modLabel = modalidade === 'contrato' ? 'Contrato' : 'Indenizatório';
   const nReg = checklist.regularidade.length;
@@ -86,8 +85,7 @@ INSTRUÇÕES DE ANÁLISE:
 8. IMPORTANTE: "regularidade_fiscal_trabalhista" e "instrucao_processual" devem ser ARRAYS de objetos, nunca strings.`;
 }
 
-export function buildUserPrompt(extractedText: string, segmento: SegmentoId, modalidade: Modalidade): string {
-  const checklist = getSegmentChecklist(segmento, modalidade);
+export function buildUserPrompt(extractedText: string, checklist: SegmentChecklist): string {
   const nTotal = checklist.regularidade.length + checklist.instrucao.length;
   return `Analise o processo administrativo de pagamento a seguir e preencha todos os ${nTotal} itens do checklist de conformidade via tool call "submit_analysis".
 

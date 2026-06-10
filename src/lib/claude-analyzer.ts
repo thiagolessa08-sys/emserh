@@ -5,6 +5,8 @@ import { logger } from '@/lib/logger';
 import type { ExtractedPage } from '@/lib/pdf-native-extractor';
 import { callClaudeTool } from '@/lib/claude-client';
 import { triagePages } from '@/lib/triage';
+import { getRulesStore } from '@/lib/rules-store';
+import { getSegmentChecklist } from '@/lib/segment-rules';
 
 const COVER_PAGES = [1, 2, 3];
 
@@ -143,8 +145,10 @@ export async function runAnalysisOnText(
   segmento: SegmentoId,
   modalidade: Modalidade,
 ): Promise<AnalysisResult> {
-  const systemPrompt = buildSystemPrompt(segmento, modalidade);
-  const userPrompt = buildUserPrompt(focusedText, segmento, modalidade);
+  const store = await getRulesStore();
+  const checklist = getSegmentChecklist(store, segmento, modalidade);
+  const systemPrompt = buildSystemPrompt(checklist, segmento, modalidade);
+  const userPrompt = buildUserPrompt(focusedText, checklist);
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {

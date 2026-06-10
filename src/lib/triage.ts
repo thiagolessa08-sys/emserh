@@ -1,6 +1,7 @@
 import type { ExtractedPage } from '@/lib/pdf-native-extractor';
 import { callClaudeTool } from '@/lib/claude-client';
-import { getSegmentChecklist, getSegmentLabel } from '@/lib/segment-rules';
+import { getRulesStore } from '@/lib/rules-store';
+import { getSegmentChecklist, getSegmentLabel, type SegmentChecklist } from '@/lib/segment-rules';
 import type { SegmentoId, Modalidade } from '@/lib/types';
 import { logger } from '@/lib/logger';
 
@@ -86,8 +87,7 @@ async function mapWithConcurrency<T, R>(
   return results;
 }
 
-function buildTriageSystemPrompt(segmento: SegmentoId, modalidade: Modalidade): string {
-  const checklist = getSegmentChecklist(segmento, modalidade);
+function buildTriageSystemPrompt(checklist: SegmentChecklist, segmento: SegmentoId): string {
   const tipos = [...checklist.regularidade, ...checklist.instrucao]
     .map((it) => `- ${it.descricao}`)
     .join('\n');
@@ -130,7 +130,9 @@ export async function triagePages(
   onProgress?: (done: number, total: number) => void,
 ): Promise<TriageResult> {
   const chunks = chunkPages(pages, CHUNK_SIZE);
-  const system = buildTriageSystemPrompt(segmento, modalidade);
+  const store = await getRulesStore();
+  const checklist = getSegmentChecklist(store, segmento, modalidade);
+  const system = buildTriageSystemPrompt(checklist, segmento);
   let done = 0;
 
   const chunkResults = await mapWithConcurrency(chunks, CONCURRENCY, async (chunk) => {
