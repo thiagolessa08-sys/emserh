@@ -44,3 +44,6 @@ tests/fixtures/pdfs/*.pdf
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Store de regras (persistido em volume Railway, não versionado)
+/data/
