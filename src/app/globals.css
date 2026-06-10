@@ -112,7 +112,7 @@
   /* ===== Header ===== */
   .header { background: var(--paper); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 50; }
   .header-inner { max-width: 1200px; margin: 0 auto; padding: 18px 32px; display: flex; align-items: center; gap: 24px; }
-  .brand { display: flex; align-items: center; gap: 18px; background: none; border: 0; padding: 0; margin: 0; font: inherit; text-align: left; cursor: pointer; border-radius: 8px; transition: opacity 0.15s; }
+  .brand { display: flex; align-items: center; gap: 18px; background: none; border: 0; padding: 0; margin: 0; font: inherit; text-align: left; text-decoration: none; cursor: pointer; border-radius: 8px; transition: opacity 0.15s; }
   .brand:hover { opacity: 0.75; }
   .brand:focus-visible { outline: 2px solid var(--emserh-navy); outline-offset: 4px; }
   .brand img { height: 38px; width: auto; display: block; }
@@ -332,18 +332,22 @@
   @media (max-width: 600px) { .segment-row { grid-template-columns: 1fr; } }
 
   /* ===== Admin ===== */
-  .admin-login { max-width: 420px; margin: 80px auto; padding: 0 20px; }
-  .admin-editor { max-width: 820px; margin: 40px auto; padding: 0 20px; }
-  .admin-input { width: 100%; border: 1px solid var(--em-border); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: var(--font-sans); color: var(--ink-1); margin-bottom: 6px; }
+  .admin-login { max-width: 440px; margin: 72px auto; padding: 0 20px; }
+  .admin-editor { max-width: 1080px; margin: 32px auto 72px; padding: 0 28px; }
+  .admin-editor .card-body { padding: 26px 30px 30px; }
+  .admin-input { width: 100%; border: 1px solid var(--em-border); border-radius: 8px; padding: 10px 13px; font-size: 13.5px; font-family: var(--font-sans); color: var(--ink-1); margin-bottom: 8px; }
   .admin-input:focus { outline: none; border-color: var(--emserh-navy); box-shadow: 0 0 0 3px rgba(10,35,81,0.08); }
-  .admin-textarea { width: 100%; min-height: 56px; border: 1px solid var(--em-border); border-radius: 8px; padding: 9px 12px; font-size: 12.5px; font-family: var(--font-sans); color: var(--ink-2); resize: vertical; }
+  .admin-textarea { width: 100%; min-height: 70px; border: 1px solid var(--em-border); border-radius: 8px; padding: 10px 13px; font-size: 13px; font-family: var(--font-sans); color: var(--ink-2); line-height: 1.55; resize: vertical; }
+  .admin-textarea:focus { outline: none; border-color: var(--emserh-navy); box-shadow: 0 0 0 3px rgba(10,35,81,0.08); }
   .admin-error { color: var(--err); font-size: 12.5px; margin: 6px 0; }
   .admin-saved { color: var(--ok); font-size: 12.5px; font-weight: 600; }
-  .rule-section { margin-top: 22px; }
-  .rule-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--emserh-navy); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line-2); }
-  .rule-item { padding: 12px; border: 1px solid var(--line-2); border-radius: 8px; margin-bottom: 10px; background: var(--paper-soft); }
-  .rule-remove { background: none; border: 0; color: var(--err); font-size: 11.5px; cursor: pointer; padding: 2px 0; font-family: inherit; }
-  .admin-actions { display: flex; align-items: center; gap: 12px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
+  .rule-section { margin-top: 30px; }
+  .rule-section-title { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--emserh-navy); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+  .rule-item { position: relative; padding: 16px 18px; border: 1px solid var(--line-2); border-radius: 10px; margin-bottom: 14px; background: var(--paper-soft); }
+  .rule-remove { position: absolute; top: 14px; right: 16px; background: none; border: 0; color: var(--err); font-size: 11.5px; font-weight: 600; cursor: pointer; padding: 2px 4px; font-family: inherit; border-radius: 5px; }
+  .rule-remove:hover { background: var(--err-soft); }
+  .rule-item .admin-input { font-weight: 600; padding-right: 80px; }
+  .admin-actions { display: flex; align-items: center; gap: 14px; justify-content: flex-end; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line-2); flex-wrap: wrap; }
 
   /* ===== Responsive ===== */
   @media (max-width: 980px) {
