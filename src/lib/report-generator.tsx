@@ -91,7 +91,7 @@ function ChecklistSection({
   items,
 }: {
   title: string;
-  items: Array<{ item: number; descricao: string; status: ChecklistItemStatus; motivo: string | null; sugestao_correcao: string | null }>;
+  items: Array<{ item: number; descricao: string; status: ChecklistItemStatus; motivo: string | null; sugestao_correcao: string | null; data_validade?: string | null }>;
 }) {
   return (
     <View>
@@ -101,6 +101,11 @@ function ChecklistSection({
           <Text style={s.checklistNum}>{it.item}.</Text>
           <View style={s.checklistDesc}>
             <Text>{it.descricao}</Text>
+            {it.data_validade && (
+              <Text style={{ color: '#1e3a5f', fontSize: 8, marginTop: 1, fontWeight: 'bold' }}>
+                Válido até: {it.data_validade}
+              </Text>
+            )}
             {it.motivo && <Text style={{ color: '#666', fontSize: 8, marginTop: 1 }}>{it.motivo}</Text>}
             {it.sugestao_correcao && (
               <Text style={{ color: '#c2410c', fontSize: 8, marginTop: 1 }}>
