@@ -29,7 +29,7 @@ export function Header({ onLogoClick }: HeaderProps) {
             Nova análise
           </a>
           <a className="header-link" href="#">Histórico</a>
-          <a className="header-link" href="#">Normativos</a>
+          <a className="header-link" href="/admin">Regras</a>
           <div className="user-chip">
             <span className="name">M. Carvalho</span>
             <div className="avatar">MC</div>
