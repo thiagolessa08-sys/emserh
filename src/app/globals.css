@@ -385,7 +385,7 @@
     --m-ok: #2F7D4A; --m-ok-soft: #E8F3EC; --m-warn: #A86A12; --m-warn-soft: #FBF1DE; --m-err: #B53A2C; --m-err-soft: #FBEDE9;
     max-width: 1200px; margin: 0 auto; padding: 32px 32px 80px; color: var(--m-ink);
   }
-  .reg-page .page-header { margin-bottom: 20px; }
+  .reg-page .page-header { display: block; margin-bottom: 20px; }
   .reg-page .breadcrumb { font-size: 12px; color: var(--m-muted); margin-bottom: 8px; }
   .reg-page .page-title { font-family: var(--font-instrument-serif), serif; font-size: 40px; font-weight: 400; color: var(--m-navy); line-height: 1.05; margin: 0 0 6px; }
   .reg-page .page-title em { font-style: italic; color: var(--m-green-deep); }

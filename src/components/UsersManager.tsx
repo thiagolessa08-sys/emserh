@@ -101,7 +101,6 @@ export function UsersManager() {
   return (
     <main className="reg-page">
       <div className="page-header">
-        <div className="breadcrumb"><span>Administração</span> › <span>Usuários</span> › <span>Novo cadastro</span></div>
         <h1 className="page-title">Cadastrar novo <em>usuário</em></h1>
         <p className="page-sub">Registre um servidor para acesso ao Auditor de Conformidade. O nível de permissão determina quais ações o usuário poderá executar sobre os processos.</p>
       </div>
