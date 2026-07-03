@@ -65,7 +65,10 @@ async function readUsers(): Promise<User[]> {
   try {
     const raw = await fs.readFile(getUsersPath(), 'utf-8');
     const parsed = JSON.parse(raw);
-    cache = Array.isArray(parsed) ? (parsed as User[]) : [];
+    // Descarta registros em formato antigo (sem email) para não quebrar o código novo.
+    cache = Array.isArray(parsed)
+      ? (parsed as User[]).filter((u) => u && typeof u.email === 'string' && u.email.length > 0)
+      : [];
   } catch {
     cache = [];
   }

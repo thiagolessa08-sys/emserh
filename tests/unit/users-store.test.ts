@@ -52,6 +52,24 @@ describe('CRUD de usuários', () => {
   });
 });
 
+describe('registros em formato antigo (sem email)', () => {
+  it('ignora registros sem email e permite criar novos', async () => {
+    // Simula um users.json antigo com um registro baseado em "username"
+    await fs.writeFile(
+      process.env.USERS_STORE_PATH!,
+      JSON.stringify([{ username: 'antigo', nome: 'Antigo', passwordHash: 'x:y' }]),
+      'utf-8',
+    );
+    resetUsersCache();
+    // o órfão é descartado
+    expect(await listUsers()).toEqual([]);
+    // e a criação de um novo usuário funciona
+    await createUser(base);
+    const users = await listUsers();
+    expect(users.map((u) => u.email)).toEqual(['joao@emserh.ma.gov.br']);
+  });
+});
+
 describe('verifyLogin (por email)', () => {
   it('aceita credenciais corretas e rejeita as erradas', async () => {
     await createUser(base);
