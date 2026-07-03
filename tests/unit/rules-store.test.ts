@@ -7,6 +7,7 @@ import {
   getRulesStore,
   saveCombination,
   resetRulesCache,
+  isPersistenceConfigured,
   CombinationPayloadSchema,
 } from '@/lib/rules-store';
 import { DEFAULT_RULES } from '@/lib/default-rules';
@@ -52,6 +53,18 @@ describe('getRulesStore + saveCombination', () => {
     resetRulesCache();
     const store = await getRulesStore();
     expect(store.fornecedor.contrato).toEqual(novo);
+  });
+});
+
+describe('isPersistenceConfigured', () => {
+  it('true quando RULES_STORE_PATH está definido', () => {
+    process.env.RULES_STORE_PATH = '/data/rules.json';
+    expect(isPersistenceConfigured()).toBe(true);
+  });
+
+  it('false quando RULES_STORE_PATH não está definido', () => {
+    delete process.env.RULES_STORE_PATH;
+    expect(isPersistenceConfigured()).toBe(false);
   });
 });
 

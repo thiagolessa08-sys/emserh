@@ -25,6 +25,15 @@ function getStorePath(): string {
   return process.env.RULES_STORE_PATH ?? path.join(process.cwd(), 'data', 'rules.json');
 }
 
+/**
+ * Indica se a persistência está configurada para sobreviver a deploys.
+ * Sem RULES_STORE_PATH apontando para um volume, as edições vão para o
+ * filesystem efêmero do container e somem no próximo deploy.
+ */
+export function isPersistenceConfigured(): boolean {
+  return Boolean(process.env.RULES_STORE_PATH);
+}
+
 let cache: RulesStore | null = null;
 
 /** Apenas para testes — limpa o cache em memória. */

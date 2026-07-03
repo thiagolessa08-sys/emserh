@@ -10,7 +10,7 @@ function emptyChecklist(): SegmentChecklist {
   return { regularidade: [], instrucao: [] };
 }
 
-export function RulesEditor({ initialStore }: { initialStore: RulesStore }) {
+export function RulesEditor({ initialStore, persistent = true }: { initialStore: RulesStore; persistent?: boolean }) {
   const [store, setStore] = useState<RulesStore>(initialStore);
   const [segmento, setSegmento] = useState<SegmentoId>(SEGMENTOS[0].id);
   const segConfig = SEGMENTOS.find((s) => s.id === segmento)!;
@@ -111,6 +111,12 @@ export function RulesEditor({ initialStore }: { initialStore: RulesStore }) {
 
   return (
     <main className="admin-editor">
+      {!persistent && (
+        <div className="admin-warning">
+          ⚠️ <strong>Persistência não configurada.</strong> As edições feitas aqui serão perdidas no próximo deploy.
+          Configure um volume montado em <code>/data</code> e a variável <code>RULES_STORE_PATH=/data/rules.json</code> no Railway.
+        </div>
+      )}
       <div className="card">
         <div className="card-head">
           <div className="card-title">Administração de Regras</div>

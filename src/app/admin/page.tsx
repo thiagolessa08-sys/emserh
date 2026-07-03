@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { verifyAuthToken } from '@/lib/admin-auth';
-import { getRulesStore } from '@/lib/rules-store';
+import { getRulesStore, isPersistenceConfigured } from '@/lib/rules-store';
 import { Header } from '@/components/Header';
 import { AdminLogin } from '@/components/AdminLogin';
 import { RulesEditor } from '@/components/RulesEditor';
@@ -24,7 +24,7 @@ export default async function AdminPage() {
   return (
     <>
       <Header active="regras" />
-      <RulesEditor initialStore={store} />
+      <RulesEditor initialStore={store} persistent={isPersistenceConfigured()} />
     </>
   );
 }
