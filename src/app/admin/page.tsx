@@ -1,17 +1,14 @@
-import { cookies } from 'next/headers';
-import { verifyAuthToken } from '@/lib/admin-auth';
 import { getRulesStore, isPersistenceConfigured } from '@/lib/rules-store';
 import { Header } from '@/components/Header';
 import { AdminLogin } from '@/components/AdminLogin';
+import { AdminNav } from '@/components/AdminNav';
 import { RulesEditor } from '@/components/RulesEditor';
+import { isAdminAuthed } from '@/lib/admin-guard';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
-  const cookieStore = await cookies();
-  const authed = verifyAuthToken(cookieStore.get('admin_auth')?.value);
-
-  if (!authed) {
+  if (!(await isAdminAuthed())) {
     return (
       <>
         <Header active="regras" />
@@ -24,6 +21,7 @@ export default async function AdminPage() {
   return (
     <>
       <Header active="regras" />
+      <AdminNav active="regras" />
       <RulesEditor initialStore={store} persistent={isPersistenceConfigured()} />
     </>
   );
