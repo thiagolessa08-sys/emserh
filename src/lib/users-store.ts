@@ -3,18 +3,36 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { z } from 'zod';
 
+export type UserRole = 'Auditor' | 'Consulta' | 'Administrador';
+
 export interface User {
-  username: string;
+  email: string; // login
   nome: string;
+  cpf: string;
+  matricula: string;
+  telefone: string;
+  unidade: string;
+  cargo: string;
+  role: UserRole;
   passwordHash: string;
   createdAt: string;
 }
 
+export type PublicUser = Omit<User, 'passwordHash'>;
+
 export const CreateUserSchema = z.object({
   nome: z.string().min(1),
-  username: z.string().min(3).regex(/^[a-zA-Z0-9._-]+$/),
+  email: z.string().email(),
+  cpf: z.string().min(1),
+  matricula: z.string().min(1),
+  telefone: z.string().optional().default(''),
+  unidade: z.string().min(1),
+  cargo: z.string().optional().default(''),
+  role: z.enum(['Auditor', 'Consulta', 'Administrador']).default('Auditor'),
   senha: z.string().min(4),
 });
+
+export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 
 function getUsersPath(): string {
   if (process.env.USERS_STORE_PATH) return process.env.USERS_STORE_PATH;
@@ -63,28 +81,42 @@ async function writeUsers(users: User[]): Promise<void> {
   cache = users;
 }
 
-export async function listUsers(): Promise<Array<{ username: string; nome: string; createdAt: string }>> {
+export async function listUsers(): Promise<PublicUser[]> {
   const users = await readUsers();
-  return users.map((u) => ({ username: u.username, nome: u.nome, createdAt: u.createdAt }));
+  return users.map(({ passwordHash: _hash, ...pub }) => pub);
 }
 
-export async function createUser(nome: string, username: string, senha: string): Promise<void> {
+export async function createUser(input: CreateUserInput): Promise<void> {
   const users = await readUsers();
-  if (users.some((u) => u.username === username)) throw new Error('DUPLICATE');
+  const email = input.email.toLowerCase();
+  if (users.some((u) => u.email.toLowerCase() === email)) throw new Error('DUPLICATE');
   await writeUsers([
     ...users,
-    { username, nome, passwordHash: hashPassword(senha), createdAt: new Date().toISOString() },
+    {
+      email,
+      nome: input.nome,
+      cpf: input.cpf,
+      matricula: input.matricula,
+      telefone: input.telefone ?? '',
+      unidade: input.unidade,
+      cargo: input.cargo ?? '',
+      role: input.role,
+      passwordHash: hashPassword(input.senha),
+      createdAt: new Date().toISOString(),
+    },
   ]);
 }
 
-export async function deleteUser(username: string): Promise<void> {
+export async function deleteUser(email: string): Promise<void> {
   const users = await readUsers();
-  await writeUsers(users.filter((u) => u.username !== username));
+  const target = email.toLowerCase();
+  await writeUsers(users.filter((u) => u.email.toLowerCase() !== target));
 }
 
-export async function verifyLogin(username: string, senha: string): Promise<{ username: string; nome: string } | null> {
+export async function verifyLogin(email: string, senha: string): Promise<{ email: string; nome: string } | null> {
   const users = await readUsers();
-  const u = users.find((x) => x.username === username);
+  const target = email.toLowerCase();
+  const u = users.find((x) => x.email.toLowerCase() === target);
   if (!u || !verifyPassword(senha, u.passwordHash)) return null;
-  return { username: u.username, nome: u.nome };
+  return { email: u.email, nome: u.nome };
 }

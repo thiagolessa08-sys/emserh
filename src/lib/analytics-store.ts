@@ -2,7 +2,16 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { logger } from '@/lib/logger';
 
-export type Analytics = { [data: string]: { [username: string]: number } };
+export interface AnalyticsEvent {
+  username: string;   // email/login do usuário
+  ts: string;         // ISO timestamp
+  conforme: boolean;  // decisao_geral === 'CONFORME'
+  durationMs: number; // tempo de processamento da análise
+}
+
+interface AnalyticsStore {
+  events: AnalyticsEvent[];
+}
 
 function getAnalyticsPath(): string {
   if (process.env.ANALYTICS_STORE_PATH) return process.env.ANALYTICS_STORE_PATH;
@@ -12,7 +21,7 @@ function getAnalyticsPath(): string {
   return path.join(base, 'analytics.json');
 }
 
-let cache: Analytics | null = null;
+let cache: AnalyticsStore | null = null;
 let writeQueue: Promise<void> = Promise.resolve();
 
 export function resetAnalyticsCache(): void {
@@ -20,19 +29,19 @@ export function resetAnalyticsCache(): void {
   writeQueue = Promise.resolve();
 }
 
-async function read(): Promise<Analytics> {
+async function read(): Promise<AnalyticsStore> {
   if (cache) return cache;
   try {
     const raw = await fs.readFile(getAnalyticsPath(), 'utf-8');
     const parsed = JSON.parse(raw);
-    cache = parsed && typeof parsed === 'object' ? (parsed as Analytics) : {};
+    cache = parsed && Array.isArray(parsed.events) ? (parsed as AnalyticsStore) : { events: [] };
   } catch {
-    cache = {};
+    cache = { events: [] };
   }
   return cache;
 }
 
-async function write(data: Analytics): Promise<void> {
+async function write(data: AnalyticsStore): Promise<void> {
   const p = getAnalyticsPath();
   await fs.mkdir(path.dirname(p), { recursive: true });
   const tmp = `${p}.tmp`;
@@ -41,22 +50,19 @@ async function write(data: Analytics): Promise<void> {
   cache = data;
 }
 
-export async function getAnalytics(): Promise<Analytics> {
-  return read();
+export async function getEvents(): Promise<AnalyticsEvent[]> {
+  return (await read()).events;
 }
 
-/** Incrementa o contador do usuário na data. Serializado para evitar corrida. */
-export function incrementCount(username: string, data: string, by = 1): Promise<void> {
+/** Registra um evento de análise. Serializado para evitar corrida. */
+export function recordAnalysis(ev: AnalyticsEvent): Promise<void> {
   writeQueue = writeQueue
     .then(async () => {
       const current = await read();
-      const next: Analytics = structuredClone(current);
-      next[data] = next[data] ?? {};
-      next[data][username] = (next[data][username] ?? 0) + by;
-      await write(next);
+      await write({ events: [...current.events, ev] });
     })
     .catch((err) => {
-      logger.error({ err: err instanceof Error ? err.message : String(err) }, 'analytics_increment_failed');
+      logger.error({ err: err instanceof Error ? err.message : String(err) }, 'analytics_record_failed');
     });
   return writeQueue;
 }

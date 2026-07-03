@@ -18,6 +18,12 @@ afterEach(async () => {
   delete process.env.USERS_STORE_PATH;
 });
 
+const base = {
+  nome: 'João Silva', email: 'joao@emserh.ma.gov.br', cpf: '12345678901',
+  matricula: '45.981-2', telefone: '(98) 90000-0000', unidade: 'GCIF',
+  cargo: 'Auditor de Controle Interno', role: 'Auditor' as const, senha: 'senha123',
+};
+
 describe('hashPassword / verifyPassword', () => {
   it('gera hash diferente da senha e verifica corretamente', () => {
     const h = hashPassword('minhasenha');
@@ -28,36 +34,39 @@ describe('hashPassword / verifyPassword', () => {
 });
 
 describe('CRUD de usuários', () => {
-  it('cria, lista e remove', async () => {
-    await createUser('João Silva', 'joao', 'senha123');
+  it('cria, lista (sem hash) e remove por email', async () => {
+    await createUser(base);
     let users = await listUsers();
-    expect(users.map((u) => u.username)).toEqual(['joao']);
+    expect(users.map((u) => u.email)).toEqual(['joao@emserh.ma.gov.br']);
     expect(users[0]).not.toHaveProperty('passwordHash');
-    await deleteUser('joao');
+    expect(users[0].unidade).toBe('GCIF');
+    expect(users[0].role).toBe('Auditor');
+    await deleteUser('joao@emserh.ma.gov.br');
     users = await listUsers();
     expect(users).toEqual([]);
   });
 
-  it('rejeita username duplicado', async () => {
-    await createUser('A', 'joao', 'x1234');
-    await expect(createUser('B', 'joao', 'y1234')).rejects.toThrow('DUPLICATE');
+  it('rejeita email duplicado', async () => {
+    await createUser(base);
+    await expect(createUser({ ...base, nome: 'Outro' })).rejects.toThrow('DUPLICATE');
   });
 });
 
-describe('verifyLogin', () => {
+describe('verifyLogin (por email)', () => {
   it('aceita credenciais corretas e rejeita as erradas', async () => {
-    await createUser('João', 'joao', 'senha123');
-    expect(await verifyLogin('joao', 'senha123')).toEqual({ username: 'joao', nome: 'João' });
-    expect(await verifyLogin('joao', 'errada')).toBeNull();
-    expect(await verifyLogin('naoexiste', 'x')).toBeNull();
+    await createUser(base);
+    expect(await verifyLogin('joao@emserh.ma.gov.br', 'senha123')).toEqual({ email: 'joao@emserh.ma.gov.br', nome: 'João Silva' });
+    expect(await verifyLogin('joao@emserh.ma.gov.br', 'errada')).toBeNull();
+    expect(await verifyLogin('naoexiste@x.com', 'x')).toBeNull();
   });
 });
 
 describe('CreateUserSchema', () => {
   it('valida payload', () => {
-    expect(CreateUserSchema.safeParse({ nome: 'A', username: 'joao', senha: '1234' }).success).toBe(true);
-    expect(CreateUserSchema.safeParse({ nome: '', username: 'joao', senha: '1234' }).success).toBe(false);
-    expect(CreateUserSchema.safeParse({ nome: 'A', username: 'ab', senha: '1234' }).success).toBe(false);
-    expect(CreateUserSchema.safeParse({ nome: 'A', username: 'joao', senha: '12' }).success).toBe(false);
+    expect(CreateUserSchema.safeParse(base).success).toBe(true);
+    expect(CreateUserSchema.safeParse({ ...base, email: 'invalido' }).success).toBe(false);
+    expect(CreateUserSchema.safeParse({ ...base, nome: '' }).success).toBe(false);
+    expect(CreateUserSchema.safeParse({ ...base, senha: '12' }).success).toBe(false);
+    expect(CreateUserSchema.safeParse({ ...base, unidade: '' }).success).toBe(false);
   });
 });
