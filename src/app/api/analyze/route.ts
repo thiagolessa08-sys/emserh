@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { logger } from '@/lib/logger';
 import { verifySession } from '@/lib/session';
 import { incrementCount } from '@/lib/analytics-store';
@@ -7,6 +6,17 @@ import type { ExtractedPage } from '@/lib/pdf-native-extractor';
 import type { AnnotationRequest } from '@/lib/pdf-annotator';
 
 export const dynamic = 'force-dynamic';
+
+/** Lê um cookie diretamente do header (funciona fora do contexto de request do Next). */
+function readCookie(request: Request, name: string): string | undefined {
+  const header = request.headers.get('cookie');
+  if (!header) return undefined;
+  for (const part of header.split(';')) {
+    const [k, ...v] = part.trim().split('=');
+    if (k === name) return decodeURIComponent(v.join('='));
+  }
+  return undefined;
+}
 
 const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
 
@@ -44,8 +54,7 @@ export async function POST(request: Request) {
   const segmento = (formData.get('segmento') as string | null) ?? 'fornecedor';
   const modalidade = (formData.get('modalidade') as string | null) ?? 'contrato';
 
-  const cookieStore = await cookies();
-  const username = await verifySession(cookieStore.get('session')?.value);
+  const username = await verifySession(readCookie(request, 'session'));
 
   if (!entries || entries.length === 0) {
     return NextResponse.json({ error: 'Nenhum arquivo enviado. Use o campo "files".' }, { status: 400 });
