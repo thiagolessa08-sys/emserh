@@ -26,6 +26,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Aplica a tudo, exceto assets estáticos.
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|logo-emserh.png).*)'],
+  // Aplica apenas às PÁGINAS (exclui /api e assets). As rotas de API fazem
+  // a própria autenticação — e manter a middleware Edge fora do /api evita
+  // que ela interfira em uploads multipart grandes (PDFs) no analyze.
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|logo-emserh.png).*)'],
 };
