@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 import { verifySession } from '@/lib/session';
-import { incrementCount } from '@/lib/analytics-store';
+import { recordAnalysis } from '@/lib/analytics-store';
 import type { ExtractedPage } from '@/lib/pdf-native-extractor';
 import type { AnnotationRequest } from '@/lib/pdf-annotator';
 
@@ -208,8 +208,12 @@ export async function POST(request: Request) {
           });
 
           if (username) {
-            const hoje = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
-            incrementCount(username, hoje).catch(() => { /* contador é secundário */ });
+            recordAnalysis({
+              username,
+              ts: new Date().toISOString(),
+              conforme: analysis.conclusao.decisao_geral === 'CONFORME',
+              durationMs: analyzeMs,
+            }).catch(() => { /* contador é secundário */ });
           }
         }
 

@@ -16,10 +16,10 @@ export async function POST(request: Request) {
   const parsed = CreateUserSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.issues }, { status: 400 });
   try {
-    await createUser(parsed.data.nome, parsed.data.username, parsed.data.senha);
+    await createUser(parsed.data);
   } catch (err) {
     if (err instanceof Error && err.message === 'DUPLICATE') {
-      return NextResponse.json({ error: 'Já existe um usuário com esse login' }, { status: 409 });
+      return NextResponse.json({ error: 'Já existe um usuário com esse e-mail' }, { status: 409 });
     }
     logger.error({ err: err instanceof Error ? err.message : String(err) }, 'user_create_failed');
     return NextResponse.json({ error: 'Falha ao criar usuário' }, { status: 500 });
@@ -30,8 +30,8 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   if (!(await isAdminAuthed('usuarios'))) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   const { searchParams } = new URL(request.url);
-  const username = searchParams.get('username');
-  if (!username) return NextResponse.json({ error: 'username ausente' }, { status: 400 });
-  await deleteUser(username);
+  const email = searchParams.get('email');
+  if (!email) return NextResponse.json({ error: 'email ausente' }, { status: 400 });
+  await deleteUser(email);
   return NextResponse.json({ ok: true });
 }

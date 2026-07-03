@@ -7,8 +7,8 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const cookieStore = await cookies();
-  const username = await verifySession(cookieStore.get('session')?.value);
-  if (!username) return NextResponse.json({ user: null });
-  const u = (await listUsers()).find((x) => x.username === username);
-  return NextResponse.json({ user: { username, nome: u?.nome ?? username } });
+  const email = await verifySession(cookieStore.get('session')?.value);
+  if (!email) return NextResponse.json({ user: null });
+  const u = (await listUsers()).find((x) => x.email === email);
+  return NextResponse.json({ user: { email, nome: u?.nome ?? email, role: u?.role ?? null } });
 }
