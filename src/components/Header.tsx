@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
   onLogoClick?: () => void;
-  active?: 'analise' | 'regras';
+  active?: 'analise' | 'regras' | 'usuarios' | 'estatisticas';
 }
 
 export function Header({ onLogoClick, active = 'analise' }: HeaderProps) {
@@ -47,8 +47,9 @@ export function Header({ onLogoClick, active = 'analise' }: HeaderProps) {
         </a>
         <div className="header-right">
           <a className={`header-link ${active === 'analise' ? 'active' : ''}`} href="/" onClick={handleHome}>Nova análise</a>
-          <a className="header-link" href="#">Histórico</a>
           <a className={`header-link ${active === 'regras' ? 'active' : ''}`} href="/admin">Regras</a>
+          <a className={`header-link ${active === 'usuarios' ? 'active' : ''}`} href="/admin/usuarios">Usuários</a>
+          <a className={`header-link ${active === 'estatisticas' ? 'active' : ''}`} href="/admin/estatisticas">Produção</a>
           {nome && (
             <div className="user-chip">
               <span className="name">{nome}</span>

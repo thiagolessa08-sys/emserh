@@ -1,0 +1,933 @@
+CARTILHA DE
+INSTRUÇÕES:
+RELATÓRIOS DE
+CONFORMIDADE
+FISCAL E
+TRABALHISTA
+EMSER
+H
+Por uma saúde melhor
+Empresa Maranhense de Serviços Hospitalare
+s
+1
+° Edição
+- 2026
+Gerência de Controle Interno Financeiro/ Diretoria
+Executiva Financeira
+Esta cartilha foi elaborada à luz da Portaria n.º 439, de 12 de setembro
+de 2024 – GAB/EMSERH, da Portaria n.º 279, de 16 de maio de 2025 –
+GAB/EMSERH, bem como do Regulamento Interno de Licitações e
+Contratos da EMSERH, de 27 de maio de 2024.
+(98) 3235-7333
+www.
+emserh.ma.gov.b
+r
+Av. Borborema, 25, Qd 16, Calhau,
+São Luís/MA
+CARTILHA DE
+INSTRUÇÕES:
+RELATÓRIOS DE
+CONFORMIDADE
+FISCAL E
+TRABALHISTA
+EMSER
+H
+Por uma saúde melhor
+Empresa Maranhense de Serviços Hospitalare
+s
+1
+° Edição
+- 2026
+Gerência de Controle Interno Financeiro/ Diretoria
+Executiva Financeira
+Esta cartilha foi elaborada à luz da Portaria n.º 439, de 12 de setembro
+de 2024 – GAB/EMSERH, da Portaria n.º 279, de 16 de maio de 2025 –
+GAB/EMSERH, bem como do Regulamento Interno de Licitações e
+Contratos da EMSERH, de 27 de maio de 2024.
+(98) 3235-7333
+www.
+emserh.ma.gov.b
+r
+Av. Borborema, 25, Qd 16, Calhau,
+São Luís/MA
+EMPRESA MARANHENSE DE SERVIÇOS HOSPITALARES
+GERÊNCIA DE CONTROLE INTERNO FINANCEIRO/
+DIRETORIA EXECUTIVA FINANCEIRA
+CARTILHA DE INSTRUÇÕES:
+RELATÓRIOS DE
+CONFORMIDADE
+FISCAL E TRABALHISTA
+Gerência de Controle Interno Financeiro/ Diretoria
+Executiva Financeira
+Esta cartilha foi elaborada à luz da Portaria n.º 439, de 12 de setembro de 2024 – GAB/EMSERH, da Portaria n.º 279, de 16 de maio de 2025 – GAB/EMSERH, bem como do Regulamento Interno de Licitações e Contratos da EMSERH, de 27 de maio de 2024.
+São Luís - MA
+2025
+® 2026, EMSERH. Todos os direitos reservados.
+Empresa Maranhense de Serviços Hospitalares - EMSERH www.emserh.ma.gov.br
+EMSERH. Gerência de Controle Interno Financeiro.
+Cartilha de Instruções: Relatórios de Conformidade Fiscal e Trabalhista GCIF
+[
+recurso eletrônico] / Gerência de Controle Interno Financeiro – EMSERH. –
+1.
+ed. – São Luís, MA: GCIF/EMSERH, 2026.
+21
+p.
+Publicação digital (e-book) no formato PDF.
+1
+. Cartilha Técnica. 2. Controle interno. 3. Empresa Maranhense
+de Serviços Hospitalares. 4. Administração Pública
+EMSERH. Gerência de Controle Interno Financeiro.
+Cartilha de Instruções: Relatórios de Conformidade Fiscal e Trabalhista GCIF
+[
+recurso eletrônico] / Gerência de Controle Interno Financeiro – EMSERH. –
+1.
+ed. – São Luís, MA: GCIF/EMSERH, 2026.
+21
+p.
+Publicação digital (e-book) no formato PDF.
+1
+. Cartilha Técnica. 2. Controle interno. 3. Empresa Maranhense
+de Serviços Hospitalares. 4. Administração Pública
+Empresa Maranhense de Serviços Hospitalares - EMSERH, Av. Borborema, 25, Qd 16, Calhau, São Luís - MA, CEP: 65071-250.
+(98) 3235-7333 | www.emserh.ma.gov.br
+EMSERH
+Empresa Maranhense de Serviços Hospitalares
+EMSERH
+Empresa Maranhense de Serviços Hospitalares
+INTRODUÇÃO ...........................................................................................................................
+5
+PRINCIPAIS RECOMENDAÇÕES
+............................................................................................
+PRINCIPAIS RECOMENDAÇÕES
+............................................................................................
+6
+MODELOS INSTRUCIONAIS ....................................................................................................
+MODELOS INSTRUCIONAIS ....................................................................................................
+7
+1. Relatório de Conformidade de Processo de Pagamento Indenizatório (Fornecedor) ......
+7
+2
+. Relatório de Conformidade de Processo de Pagamento Indenizatório (Serviços
+Médicos) ........
+.......................................................................................................................
+2
+. Relatório de Conformidade de Processo de Pagamento Indenizatório (Serviços
+Médicos) ........
+.......................................................................................................................
+8
+3
+. Relatório de Conformidade de Processo de Pagamento Indenizatório (Cessão de Mão
+de Obra) ...............................................................................................................................
+3
+. Relatório de Conformidade de Processo de Pagamento Indenizatório (Cessão de Mão
+de Obra) ...............................................................................................................................
+9
+4
+. Relatório de Conformidade de Processo de Pagamento Contrato (Fornecedor) .............
+4
+. Relatório de Conformidade de Processo de Pagamento Contrato (Fornecedor) .............
+10
+5. Relatório de Conformidade de Processo de Pagamento Contrato (Serviços Médicos) ...
+11
+6
+. Relatório de Conformidade de Processo de Pagamento Contrato (Cessão de Mão de
+Obra) ....................................................................................................................................
+6
+. Relatório de Conformidade de Processo de Pagamento Contrato (Cessão de Mão de
+Obra) ....................................................................................................................................
+12
+7. Relatório de Conformidade de Processo de Pagamento Contrato (CAHOSP) ................
+13
+8
+. Relatório de Conformidade de Processo de Pagamento Contrato (Monopólio
+)
+..............
+8
+. Relatório de Conformidade de Processo de Pagamento Contrato (Monopólio
+)
+..............
+14
+9
+. Relatório de Conformidade de Processo de Pagamento Contrato (Locação Pessoa
+Jurídica) ................................................................................................................................
+9
+. Relatório de Conformidade de Processo de Pagamento Contrato (Locação Pessoa
+Jurídica) ................................................................................................................................
+15
+10
+. Relatório de Conformidade de Processo de Pagamento Contrato (Locação Pessoa
+Física) ...................................................................................................................................
+10
+. Relatório de Conformidade de Processo de Pagamento Contrato (Locação Pessoa
+Física) ...................................................................................................................................
+16
+11
+. Relatório de Conformidade de Processo de Pagamento Contrato Apensado (Cessão
+de Mão de Obra) ..................................................................................................................
+11
+. Relatório de Conformidade de Processo de Pagamento Contrato Apensado (Cessão
+de Mão de Obra) ..................................................................................................................
+17
+12.
+Despacho para Processo Secundário de Pagamento de Contrato com
+Subcontratação
+....................................................................................................................
+12.
+Despacho para Processo Secundário de Pagamento de Contrato com
+Subcontratação
+....................................................................................................................
+18
+13
+. Padrão de Relatório de Conformidade de Processo de Pagamento com Glosa ...........
+13
+. Padrão de Relatório de Conformidade de Processo de Pagamento com Glosa ...........
+19
+CONSIDERAÇÕES FINAIS .......................................................................................................
+CONSIDERAÇÕES FINAIS .......................................................................................................
+20
+20
+REFERÊNCIAS ..........................................................................................................................
+21
+INTRODUÇÃO
+05
+A presente cartilha tem como finalidade orientar e padronizar a elaboração dos Relatórios de Conformidade Fiscal e Trabalhista no âmbito da Gerência de Controle Interno Financeiro (GCIF) da EMSERH, sendo uma ferramenta de consulta e aprendizagem destinada à equipe da GCIF, com o objetivo de aprimorar a qualidade técnica e a uniformidade dos relatórios produzidos.
+Este material integra o dossiê de atualização dos Relatórios de Conformidade Fiscal e Trabalhista de 2026 e deve ser rigorosamente observado, reforçando a responsabilidade individual de cada consultor quanto à correta aplicação das instruções aqui estabelecidas.
+A equipe da Gerência de Controle Interno Financeiro assume, ao utilizar esta cartilha, o compromisso de executar seus trabalhos com responsabilidade, excelência e observância estrita às normas internas da EMSERH. O cumprimento das instruções aqui estabelecidas não constitui apenas uma diretriz técnica, mas uma obrigação funcional prevista no Regimento Interno da EMSERH, que exige integridade, transparência e conformidade em todos os processos.
+PRINCIPAIS RECOMENDAÇÕES
+ESTRUTURA PADRÃO
+As margens do relatório não devem ser alteradas para não ultrapassar os limites do SEI;
+Não devem ser adicionados ou realocados campos do relatório; Textos fixos devem ser mantidos conforme o modelo; Nunca excluir linhas ou células.
+PREENCHIMENTO CORRETO
+06
+Linguagem formal e objetiva; Justificativas fundamentadas; Evitar termos subjetivos e genéricos; Não utilizar abreviações não padronizadas; Quando um documento ou informação não se aplicar, preencher com observação “Não se aplica”;
+Correto preenchimento dos ID’s verificadores de cada documento. Relatórios com ausência de ID’s, serão retornados para revisão.
+EMISSÃO DE DOCUMENTOS FISCAIS
+As certidões devem estar válidas na data de emissão do relatório, sendo necessário conferir sempre a possibilidade de atualização.
+Não serão aceitas certidões com vencimento na mesma data do relatório (prazo mínimo de 5 dias deve ser observado), exceto nos casos de impossibilidade de emissão pelo órgão competente.
+Na situação em que não seja possível realizar a atualização da certidão, deverá ser registrado como pendência no GPC.
+Na situação em que não for possível realizar a atualização da certidão, o fato deverá ser registrado como pendência no GPC.
+CONFERÊNCIA ANTES DE ENVIAR
+Todos os campos obrigatórios devem ser preenchidos; Utilizar os modelos atualizados; Realizar uma revisão textual para evitar erros de escrita no documento; Verificar links diretos antes da assinatura do documento no SEI;
+07
+MODELOS INSTRUCIONAIS
+1. Relatório de Conformidade de processo de pagamento Indenizatório
+(Fornecedor)
+0 8
+2. Relatório de Conformidade de Processo de Pagamento Indenizatório
+(Serviços Médicos)
+0 9
+3. Relatório de Conformidade de Processo de Pagamento Indenizatório
+(Cessão de Mão de Obra)
+1 0
+(Fornecedor)
+1 1
+(Serviços Médicos)
+1 2
+(Cessão de Mão de Obra)
+1 3
+(CAHOSP)
+1 4
+(Monopólio)
+1 5
+(Locação Pessoa Jurídica)
+1 6
+10. Relatório de Conformidade de Processo de Pagamento Contrato
+(Locação Pessoa Física)
+Informar o objeto completo de cada
+processo de pagamento.
+Inserir a razão social e o respectivo número do CNPJ de cada processo conforme suas notas fiscais.
+Informar o número do contrato e acrescentar o número do termo
+aditivo, quando houver.
+Neste campo constam dos normativos, leis e portarias que serviram de base para este
+relatório e não deve ser alterado.
+Inserir a data atualizada e os
+verificadores das consultas e das
+certidões, tanto da empresa contratada quanto da
+subcontratada,
+atentando-se ao
+preenchimento em cada coluna e observando os
+seguintes pontos: 1.  Nos casos de certidões conjuntas, utilizar a observação “Certidão conjunta” e repetir as datas e os IDs;
+2.  Quando houver substituição por Parecer Referencial, deixar a data de validade em branco e preencher o campo do verificador com o ID do anexo.
+Inserir a data da consulta do Cadastro
+Estadual de Inadimplentes (CEI) do prestador/ fornecedor de serviços anexado aos autos.
+Nestas colunas, sinalizar a situação do documento, indicando se está conforme ou não conforme e não realizar a emissão do relatório com qualquer campo marcado como não conforme. Nos casos de itens conforme, porém com ressalva, descrever a condição e incluir as comprovações no
+campo observações.
+Inserir todas as informações pertinentes as comprovações trabalhistas.
+Mencionar os documentos que
+possuem ID e inserir todas as informações relacionadas à Relatório de
+Acompanhamento e
+Fiscalização do
+Contrato e
+Cronograma de Desembolso Financeiro.
+Campo destinado à inclusão de informações complementares acerca do Kit Contrato que o consultor(a) considerar relevantes.
+Mencionar os documentos que
+possuem ID, incluindo o
+Relatório Contábil,
+Disponibilidade
+Financeira e o
+Memorando Contábil com o respectivo número.
+Nestes campos constam informações sobre o fluxo processual, as
+competências da GCIF e o alcance da análise processual; não devem ser alterados sem autorização prévia.
+11. Relatório de Conformidade de Processo de Pagamento: Contrato com Subcontratação (Cessão de Mão de Obra)
+RELATÓRIO DE CONFORMIDADE - PAGAMENTO CONTRATO DE FORNECEDOR COM SUBCONTRATAÇÃO
+1.  IDENTIFICAÇÃO DO PROCESSO
+PERÍODO   DE REFERÊNCIA
+CREDOR - CONTRATADACONTRATOOBJETONÚMERO DO PROCESSOVALOR (R$)
+MODELO 1 LTDA1º T.A. ao CTR NºSERVIÇOS DE LIMPEZA
+MAIO/2026202511021500001R$ 100.000,00
+CNPJ:00.000.001/0001-01001/2025HOSPITALAR
+PERÍODO   DE REFERÊNCIA
+CREDOR - SUBCONTRATADACONTRATOOBJETONÚMERO DO PROCESSOVALOR (R$)
+MODELO 2 LTDA1º T.A. ao CTR NºSERVIÇOS DE LIMPEZA
+MAIO/2026 202511021500002 R$ 15.000,00 CNPJ: 00.000.002/0001-01 001/2025 HOSPITALAR
+Pagamento de Contrato Administrativo: Modalidade de pagamento decorrente de obrigação contratual firmada com o ente da Administração Pública como forma de contraprestação pelos serviços contratualizados, em acordo com as cláusulas contratuais pactuadas e a legislação vigente pertinente ao tema. Para concretização do pagamento, a contratada deve manter, durante toda a execução do contrato, compatibilidade com as obrigações assumidas, e todas as condições de habilitação e qualificação exigidas quando da contratação.
+BASE LEGAL
+Na execução dos trabalhos foram usadas as seguintes fontes de critérios:
+Portaria nº 439, de 12 de setembro de 2024- GAB/EMSERH e Atualização confome Portaria N° 279/2025-GAB/EMSERH, de 16 de maio de 2025. Política de Controle Interno, Conformidade e Gestão de Riscos, – 1. ed. – São Luís. EMSERH, 2023 Regulamento Interno de Licitações e Contratos – 2. ed. –São Luís: EMSERH,2024.
+Lei Federal 13.303, de 30 de junho de 2016;
+Manual de fiscal de contrato/EMSERH
+DA COMPROVAÇÃO DE REGULARIDADE FISCAL E TRABALHISTA
+CONTRATADASUBCONTRATADA
+ITEMREGULARIDADE FISCAL E TRABALHISTAOBSERVAÇÕES
+DATA DEDATA DE
+VERIFICADORVERIFICADOR
+VALIDADEVALIDADE
+Data da Consulta:Data da Consulta:
+Cartão CNPJ emitido nos últimos 90 (noventa) dias79492267778133
+31/12/202631/12/2026
+Certidão de Regularidade FGTS31/12/2026776789631/12/20267967902Juntada GCIF no processo da Subcontratada.
+Certidão de Débitos Relativos a Créditos Tributários
+31/12/2026776789631/12/20267778133Juntada GCIF no processo da Contratada.
+Federais e Dívida Ativa da União
+Certidão Negativa de Débitos Trabalhistas (Serviços de Mão
+31/12/2026776789831/12/20267778133 de Obra Terceirizada)
+Certidão Negativa de Débitos Estaduais31/12/2026776789631/12/20267778133Certidão conjunta.
+Certidão Negativa de Débitos Inscritos na Dívida Ativa
+31/12/2026776789631/12/20267778133Certidão conjunta.
+Estadual Consulta Optante Simples Nacional emitida nos últimos 90Data da Consulta:Data da Consulta:
+77678967778133
+(noventa) dias31/12/202631/12/2026
+Data da Consulta:Data da Consulta:
+Cadastro Estadual de Inadimplentes - CEI77680077967902 31/12/202631/12/2026
+Processo conforme quanto à Regularidade Fiscal e Trabalhista - Vide Certidões
+4.  DA ANÁLISE DA INSTRUÇÃO PROCESSUAL
+PROCESSO DE PAGAMENTO CONTRATO DE FORNECEDOR COM SUBCONTRATAÇÃO – DOCUMENTAÇÃO NECESSÁRIA
+NÃO CONTRATADA SUBCONTRATADA VERIFICAÇÃO CONFORME
+CONFORMEVERIFICADOROBSERVAÇÕESVERIFICADOROBSERVAÇÕES
+17
+Apresentação da solicitação do pagamento, contendo os dados
+7767544Solicitação de Pagamento.7777905 bancários.
+Apresentação da Nota Fiscal devidamente atestada pelo Fiscal  doNF n° 119, Atesto de7777905,NF n° 120, Atesto de
+7767544, 7835415
+Contrato.Documento e Autenticidade.  7839739Documento e Autenticidade.
+Comprovação de pagamento de salários (remuneração), inclusive Comprovantes de Pagamentos Comprovantes de Pagamentos férias e 13° salário, quando houver, de vale-transporte, de vale- de Salários e Férias, Vale- de Salários e Férias, Valealimentação; de encargos sociais e previdenciários, com apresentação transporte, Declaração de Não 7777947, transporte, Declaração de Não de cópia das guias de recolhimento de INSS e FGTS, correspondentes 7767607, 7767705, Optantes do Vale Transporte, 7778032, Optantes do Vale Transporte,
+ao mês da última nota fiscal ou fatura vencida, compatível com os 7767758, 7835231 Vale Alimentação e Cesta 7778342, Vale Alimentação e Cesta empregados à execução do serviço, nominalmente identificados, nos Básica, guias de recolhimento de 7967902 Básica, guias de recolhimento termos do decreto federal n° 3.048/1999; cumprimento das INSS e FGTS; Convenção de INSS e FGTS; Convenção obrigações contidas em Convenção Coletiva. Coletiva de Trabalho 2026/2026. Coletiva de Trabalho 2026/2026.
+Relatório de Acompanhamento e
+Relatório de Acompanhamento e Fiscalização do Contrato
+7786189,Fiscalização do Contrato eDocumentação
+Cronograma de Desembolso Financeiro devidamente assinados peloX_____
+7786053Cronograma de Desembolso  conjunta com a contratada.
+Fiscal do Contrato.
+Financeiro
+UPA Vinhais, subitem 4.19
+Documentação conjunta com a
+Plano operativo e a indicação da linha de despesa.X 7824473Serviços de Limpeza/_____
+contratada. Higienização Hospitalar
+Referência do número do processo ao qual pertence o Kit Contrato
+(cópia do contrato, publicação do extrato do contrato no DiárioKit Contrato com cópia do
+Documentação conjunta com a
+Oficial do Estado, aditivos, extratos dos termos aditivos no DiárioX2025.110215.00007 contrato, 4° Termo Aditivo  e_____
+contratada.
+Oficial do Estado, termo de apostilamentos (quando houver), portaria Portaria de Fiscais n° 100/2025. dos fiscais do contrato e publicação do extrato).
+Manifestação da AutoridadeManifestação da Autoridade
+7841157,7854342,
+Manisfestação da área técnica assinada.X Competente e  Termo deCompetente e Termo de
+7785838  7785931 ApensamentoApensamento
+Relatório Contábil, Relatório Contábil,
+7880288,
+7883282,Disponibilidade Financeira eDisponibilidade Financeira e
+Apresentação do Relatório de lançamentos contábil e fiscal.X   7880719,
+7887521, 7887554 Memorando nº 1002/2026/DF-Memorando nº 1003/2026/DF-
+7880730
+EMSERHEMSERH
+5. RESULTADO DA ANÁLISE
+DIRECIONAMENTO DO FLUXO PROCESSUAL
+CONCLUSÃO
+SETORPROVIDÊNCIAS
+Com base nos documentos comprobatórios da execução contratual presentes na solicitação, com as devidas justificativas apresentadas Diretoria Executiva Financeira Para autorização do pagamento conforme relatório. quanto à proporcionalidade do valor do pagamento em decorrência da vigência contratual, e no reconhecimento pelo fiscal do direito Gabinete Para aprovação e  autorização do pagamento da despesa. adquirido pelo credor, opinamos pela continuidade do processo de pagamento. Gerência Financeira Para o Pagamento da Despesa.
+Vale ressaltar que cabe a esta Gerência de Controle Interno Financeiro, subordinada à Diretoria Executiva Financeira, uma análise quanto à regularidade fiscal e trabalhista constante nos autos, não adentrando na conveniência e oportunidade dos atos praticados pelos setores técnicos competentes. Ressalvamos que todos os despachos, atestos, declarações, relatórios, análises técnicas, contábeis e pareceres são de única e exclusiva responsabilidade dos seus respectivos setores e seus signatários. Por oportuno, informamos que o presente Relatório fica condicionado à verificação da validade das Certidões de Regularidade Fiscal, Trabalhista e do CEI, conforme exigido pela Lei Federal nº 13.303, de 30 de junho de 2016 e regulamentações internas aplicáveis.
+Analisado por:
+[NOME COMPLETO DO(A) CONSULTOR(A)]
+Consultor(a) de Controle Interno Financeiro
+Devem constar, antes Matr. Nº 0000 - DEFIN/EMSERH de cada assinatura,
+Revisado por:as indicações deInformar nome completo do(a)
+competência doconsultor(a), do(a)
+Inserir o número completo de cada
+processo conforme suas  etiquetas.
+Inserir o valor total bruto dos fornecimentos ou prestações de serviços.
+Informar a data completa dos fornecimentos ou
+prestações de serviços,
+observando as seguintes exceções: 1. Para
+referência a um mês completo, utilize o
+formato: “MAIO/2025”; 2. Para datas ou períodos específicos, registre a data completa. Ex.:
+15/10/2025; ou 15/10/2025 a 29/10/2025.
+A coluna “Verificador” deve ser utilizada em todo o relatório para
+informar os IDs de cada documento, que poderão ser encontrados no
+anexo do processo no sistema SEI.
+O campo Observações é utilizado em todo o
+relatório para acrescentar informações adicionais sobre cada documento,
+observando os seguintes pontos:
+1. Não devem ser utilizados textos
+completos em caixa alta; 2. Certidões anexadas ao processo pelo consultor da GCIF devem receber a observação “Juntada
+GCIF” como indicação do ocorrido.
+3. Quando houver substituição por Parecer Referencial, mencioná-lo com o seu respectivo número.
+Mencionar os documentos que
+possuem ID e inserir todas as informações relacionadas à Solicitação de Pagamento.
+Mencionar os documentos que
+possuem ID e inserir todas as informações relacionadas à Solicitação de Pagamento.
+Informar os números das notas fiscais, faturas, cartas de
+correção, notas fiscais canceladas ou substituídas,
+autenticações, atestos, desmembramentos e glosas.
+Inserir unidade, descrição da linha de despesa e informações sobre remanejamentos, observando as seguintes exceções:
+Nos casos de PDT quenão possuam numeração de linhas, incluir somente a descrição da linha.
+Para linhas comuns adiversas unidades,
+utilizar apenas uma linha, mesmo que a numeração seja diferente.
+Informar todas as manifestações da área demandante realizadas ao longo do processo, a Justificativa de Lapso
+Temporal e o Termo de Apensamento.
+ATENÇÃO:
+coordenação e doconsultor, da[NOME COMPLETO DO(A) COORDENADOR(A)]gerentecoodernador(a), juntamente com a e do(a)É obrigatório o correto gestor quanto àCoordenador(a) de Controle Interno Financeirodescrição completa do cargopreenchimento das conformidade doprocesso.Matr. Nº 0000 - DEFIN/EMSERHe seguido danúmero da matrícula, indicação dainformações de cada
+De acordo:diretoria.processo, em suas
+respectivas colunas, de
+[NOME COMPLETO DO(A) GERENTE forma separada.
+Gerente de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+12. Despacho para Processo Secundário de Pagamento de Contrato com
+Subcontratação
+A subcontratação é um mecanismo pelo qual a empresa contratante, detentora de instrumento contratual firmado com a EMSERH, contrata uma empresa, denonimada subcontratada, visando à cooperação na execução dos serviços contratados e/ou no fornecimento de bens, sem prejuízo das responsabilidades contratuais e legais.
+1 8
+Os processos de pagamentos com subcontratação, só ocorrem mediante previsão contratual e suas documentações deverão ser apresentadas em conjunto à EMSERH, no entanto, deverão compor dois processos de pagamentos distintos, procedimento chamado de apensamento. O processo principal será composto pela documentação da empresa contratante, enquanto o processo secundário deverá conter a documentação da empresa subcontratada.
+A análise dos processos ocorre de forma concomitante, resultando em um único relatório de conformidade que reúne as informações de ambos e deve ser anexado ao processo principal. Já o processo secundário da empresa subcontratada receberá apenas um despacho com as informações essenciais referentes ao apensamento, conforme modelo indicado abaixo.
+GERÊNCIA DE CONTROLE INTERNO FINANCEIRO
+DESPACHO - GCIF/EMSERH
+São Luís, 01 de junho de 2026
+Processo principal: 2025.110215.00001
+Proc
+esso a ser apensado
+(secundário): 2025.110215.00002
+Ressaltamos que a Nota Fiscal Nº 119, diz respeito ao pagamento da contratada
+MODELO
+1
+LTDA
+constante
+no
+Processo
+Sei
+2025.110215.000
+0
+1
+(
+processo
+principal). Já a Nota Fiscal Nº 120 trata do pagamento da subcontratada MODELO
+2
+LTDA constante no Processo Sei
+2025.110215.0000
+2
+(processo secundário).
+O Relatório de Conformidade (ID:
+1
+100000
+)
+, seguirá no processo pri
+ncipal.
+A
+nalisado por:
+[
+NOME COMPLETO DO CONSULTOR(A
+)]
+Consultor(a) de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+Revisado por:
+[
+NOME COMPLETO DO(A) COORDENADOR(A
+)]
+Coordenador(a) de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+De acordo:
+[
+NOME COMPLETO DO(A) GERENTE
+Gerente de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+H
+EMSER
+s
+Empresa Maranhense de Serviços Hospitalare
+Por uma saúde melhor
+Informar
+nome
+completo
+do(a)
+consultor(a)
+,
+do(a)
+coodernador(a)
+e
+do(a)
+gerente
+,
+juntamente com a
+descrição
+completa do
+cargo
+e
+número
+da matrícula,
+seguido da
+indicação da
+diretoria.
+Inserir o
+número
+completo de
+cada processo
+conforme suas
+etiquetas.
+Informar os
+números das
+notas fiscais
+e/ou
+faturas,
+razão social
+e o
+número
+dos seus
+respectivos
+processos.
+Os seguintes
+dados são
+inseridos
+automaticamente
+após a geração
+do despacho no
+sistema SEI.
+Informar o
+verificador
+do
+relatório de
+conformidade
+anexado ao
+processo
+principal.
+GERÊNCIA DE CONTROLE INTERNO FINANCEIRO
+DESPACHO - GCIF/EMSERH
+São Luís, 01 de junho de 2026
+Processo principal: 2025.110215.00001
+Proc
+esso a ser apensado
+(secundário): 2025.110215.00002
+Ressaltamos que a Nota Fiscal Nº 119, diz respeito ao pagamento da contratada
+MODELO
+1
+LTDA
+constante
+no
+Processo
+Sei
+2025.110215.000
+0
+1
+(
+processo
+principal). Já a Nota Fiscal Nº 120 trata do pagamento da subcontratada MODELO
+2
+LTDA constante no Processo Sei
+2025.110215.0000
+2
+(processo secundário).
+O Relatório de Conformidade (ID:
+1
+100000
+)
+, seguirá no processo pri
+ncipal.
+A
+nalisado por:
+[
+NOME COMPLETO DO CONSULTOR(A
+)]
+Consultor(a) de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+Revisado por:
+[
+NOME COMPLETO DO(A) COORDENADOR(A
+)]
+Coordenador(a) de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+De acordo:
+[
+NOME COMPLETO DO(A) GERENTE
+Gerente de Controle Interno Financeiro
+Matr. Nº 0000 - DEFIN/EMSERH
+H
+EMSER
+s
+Empresa Maranhense de Serviços Hospitalare
+Por uma saúde melhor
+Informar
+nome
+completo
+do(a)
+consultor(a)
+,
+do(a)
+coodernador(a)
+e
+do(a)
+gerente
+,
+juntamente com a
+descrição
+completa do
+cargo
+e
+número
+da matrícula,
+seguido da
+indicação da
+diretoria.
+Inserir o
+número
+completo de
+cada processo
+conforme suas
+etiquetas.
+Informar os
+números das
+notas fiscais
+e/ou
+faturas,
+razão social
+e o
+número
+dos seus
+respectivos
+processos.
+Os seguintes
+dados são
+inseridos
+automaticamente
+após a geração
+do despacho no
+sistema SEI.
+Informar o
+verificador
+do
+relatório de
+conformidade
+anexado ao
+processo
+principal.
+13. Padrão de Relatório de Conformidade de Processo de Pagamento com Glosa
+1 9
+Glosa em processos de pagamento é a recusa, redução ou cancelamento, parcial ou total, de valores faturados, aplicada quando são identificadas inconsistências técnicas, documentais ou operacionais, garantindo a correção dos pagamentos e assegurando a conformidade legal, fiscal e administrativa dos processos.
+A informação referente a glosa em processo de pagamento, deverá ser inserida no relatório de conformidade, consoante os modelos demonstrados abaixo.
+RELATÓRIO DE CONFORMIDADE - PAGAMENTO DE FORNECEDOR
+1
+.  IDENTIFICAÇÃO DO PROCESSO
+CREDOR
+OBJETO
+PERÍODO
+DE REFERÊNCIA
+NÚMERO DO
+PROCESSO
+VALOR (R$)
+MODELO LTDA
+FORNECIMENTO DE ALIMENTAÇÃO
+HOSPITALAR NA MODALIDADE
+TRANSPORTADA
+JANEIRO/2026
+202511021500000
+R$ 100.000,00
+CNPJ:
+00.000.001/0001-00
+Valor TOTAL do Termo de Ajuste de Contas:
+R$ 100.000,00
+Valor da Glosa:
+R$ 10.000,00
+Valor após a Glosa:
+R$ 90.000,00
+Reconhecimento de Dívida)
+(
+Pagamento Indenizatório
+002/2017-
+despesa sem cobertura contratual, objeto de reconhecimento da obrigação de indenizar conforme o Parecer Normativo nº
+:
+ASS/PGE/MA, sem prejuízo da apuração da responsabilidade de quem deu causa, considerando que o particular não contribuiu para a nulidade contratual e deve seguir procedimentos legais e
+orçamentários para garantir a legalidade desses pagamentos.
+2.
+BASE LEGAL
+Na execução dos trabalhos foram usadas as seguintes fontes de critérios:
+Portaria nº 439, de 12 de setembro de 2024- GAB/EMSERH e Atualização conforme Portaria N° 279/2025-GAB/EMSERH, de 16 de maio de 2025;
+Lei Federal 13.303, de 30 de junho de 2016;
+Parecer Normativo nº 002/2017-ASS/PGE/MA;
+Política de Controle Interno, Conformidade e Gestão de Riscos, – 1. ed. – São Luís.EMSERH, 2023.
+Inserir o
+valor total bruto
+do
+fornecimento ou
+prestação de serviços.
+Inserir o
+valor da glosa
+realizada, conforme os
+documentos
+comprobatórios anexados
+ao processo.
+Relatório de Conformidade de Processo de Pagamento Indenizatório
+Neste campo deverá constar o
+valor
+líquido
+do fornecimento ou da
+prestação de serviços,
+após a
+aplicação da glosa
+.
+Em processos de caráter
+indenizatório, este campo
+deve ser preenchido com
+o
+valor total bruto
+do
+fornecimento ou prestação
+de serviços.
+RELATÓRIO DE CONFORMIDADE - PAGAMENTO DE FORNECEDOR
+1
+.  IDENTIFICAÇÃO DO PROCESSO
+CREDOR
+OBJETO
+PERÍODO
+DE REFERÊNCIA
+NÚMERO DO
+PROCESSO
+VALOR (R$)
+MODELO LTDA
+FORNECIMENTO DE ALIMENTAÇÃO
+HOSPITALAR NA MODALIDADE
+TRANSPORTADA
+JANEIRO/2026
+202511021500000
+R$ 100.000,00
+CNPJ:
+00.000.001/0001-00
+Valor TOTAL do Termo de Ajuste de Contas:
+R$ 100.000,00
+Valor da Glosa:
+R$ 10.000,00
+Valor após a Glosa:
+R$ 90.000,00
+Reconhecimento de Dívida)
+(
+Pagamento Indenizatório
+002/2017-
+despesa sem cobertura contratual, objeto de reconhecimento da obrigação de indenizar conforme o Parecer Normativo nº
+:
+ASS/PGE/MA, sem prejuízo da apuração da responsabilidade de quem deu causa, considerando que o particular não contribuiu para a nulidade contratual e deve seguir procedimentos legais e
+orçamentários para garantir a legalidade desses pagamentos.
+2.
+BASE LEGAL
+Na execução dos trabalhos foram usadas as seguintes fontes de critérios:
+Portaria nº 439, de 12 de setembro de 2024- GAB/EMSERH e Atualização conforme Portaria N° 279/2025-GAB/EMSERH, de 16 de maio de 2025;
+Lei Federal 13.303, de 30 de junho de 2016;
+Parecer Normativo nº 002/2017-ASS/PGE/MA;
+Política de Controle Interno, Conformidade e Gestão de Riscos, – 1. ed. – São Luís.EMSERH, 2023.
+Inserir o
+valor total bruto
+do
+fornecimento ou
+prestação de serviços.
+Inserir o
+valor da glosa
+realizada, conforme os
+documentos
+comprobatórios anexados
+ao processo.
+Relatório de Conformidade de Processo de Pagamento Indenizatório
+Neste campo deverá constar o
+valor
+líquido
+do fornecimento ou da
+prestação de serviços,
+após a
+aplicação da glosa
+.
+Em processos de caráter
+indenizatório, este campo
+deve ser preenchido com
+o
+valor total bruto
+do
+fornecimento ou prestação
+de serviços.
+RELATÓRIO DE CONFORMIDADE - PAGAMENTO CONTRATO DE FORNECEDOR
+.  IDENTIFICAÇÃO DO PROCESSO
+1
+CREDOR
+CONTRATO
+OBJETO
+PERÍODO
+DE REFERÊNCIA
+NÚMERO DO
+PROCESSO
+VALOR (R$)
+MODELO LTDA
+1
+º T.A. ao CTR Nº
+001/2025
+MANUTENÇÃO DE
+EQUIPAMENTOS MÉDICO-
+HOSPITALARES
+/01/2026 a
+31/01/2026
+02
+202511021500000
+R$ 100.000,00
+CNPJ:
+00.000.001/0001-00
+Valor da Glosa:
+R$ 0,00
+Valor após a Glosa:
+R$ 0,00
+Pagamento de Contrato Administrativo:
+Modalidade de pagamento decorrente de obrigação contratual firmada com o ente da Administração Pública como forma de contraprestação pelos
+serviços contratualizados, em acordo com as cláusulas contratuais pactuadas e a legislação vigente pertinente ao tema. Para concretização do pagamento, a contratada deve manter, durante
+toda a execução do contrato, compatibilidade com as obrigações assumidas, e todas as condições de habilitação e qualificação exigidas quando da contratação.
+2.
+BASE LEGAL
+Na execução dos trabalhos foram usadas as seguintes fontes de critérios:
+Portaria nº 439, de 12 de setembro de 2024- GAB/EMSERH e Atualização confome Portaria N° 279/2025-GAB/EMSERH, de 16 de maio de 2025.
+Política de Controle Interno, Conformidade e Gestão de Riscos, – 1. ed. – São Luís. EMSERH, 2023
+Regulamento Interno de Licitações e Contratos – 2. ed. –São Luís: EMSERH,2024.
+Lei Federal 13.303, de 30 de junho de 2016;
+Manual de fiscal de contrato/EMSERH
+Inserir o
+valor total bruto
+do
+fornecimento ou
+prestação de serviços.
+Inserir o
+valor da glosa
+realizada, conforme os
+documentos
+comprobatórios anexados
+ao processo.
+Relatório de Conformidade de Processo de Pagamento Contrato
+Neste campo deverá
+constar o
+valor líquido
+do
+fornecimento ou da
+prestação de serviços,
+após a aplicação da
+glosa
+.
+RELATÓRIO DE CONFORMIDADE - PAGAMENTO CONTRATO DE FORNECEDOR
+.  IDENTIFICAÇÃO DO PROCESSO
+1
+CREDOR
+CONTRATO
+OBJETO
+PERÍODO
+DE REFERÊNCIA
+NÚMERO DO
+PROCESSO
+VALOR (R$)
+MODELO LTDA
+1
+º T.A. ao CTR Nº
+001/2025
+MANUTENÇÃO DE
+EQUIPAMENTOS MÉDICO-
+HOSPITALARES
+/01/2026 a
+31/01/2026
+02
+202511021500000
+R$ 100.000,00
+CNPJ:
+00.000.001/0001-00
+Valor da Glosa:
+R$ 0,00
+Valor após a Glosa:
+R$ 0,00
+Pagamento de Contrato Administrativo:
+Modalidade de pagamento decorrente de obrigação contratual firmada com o ente da Administração Pública como forma de contraprestação pelos
+serviços contratualizados, em acordo com as cláusulas contratuais pactuadas e a legislação vigente pertinente ao tema. Para concretização do pagamento, a contratada deve manter, durante
+toda a execução do contrato, compatibilidade com as obrigações assumidas, e todas as condições de habilitação e qualificação exigidas quando da contratação.
+2.
+BASE LEGAL
+Na execução dos trabalhos foram usadas as seguintes fontes de critérios:
+Portaria nº 439, de 12 de setembro de 2024- GAB/EMSERH e Atualização confome Portaria N° 279/2025-GAB/EMSERH, de 16 de maio de 2025.
+Política de Controle Interno, Conformidade e Gestão de Riscos, – 1. ed. – São Luís. EMSERH, 2023
+Regulamento Interno de Licitações e Contratos – 2. ed. –São Luís: EMSERH,2024.
+Lei Federal 13.303, de 30 de junho de 2016;
+Manual de fiscal de contrato/EMSERH
+Inserir o
+valor total bruto
+do
+fornecimento ou
+prestação de serviços.
+Inserir o
+valor da glosa
+realizada, conforme os
+documentos
+comprobatórios anexados
+ao processo.
+Relatório de Conformidade de Processo de Pagamento Contrato
+Neste campo deverá
+constar o
+valor líquido
+do
+fornecimento ou da
+prestação de serviços,
+após a aplicação da
+glosa
+.
+CONSIDERAÇÕES FINAIS
+20
+A utilização adequada desta cartilha é indispensável, pois ela não se limita a ser um instrumento normativo interno, mas também representa uma oportunidade de evolução contínua para a equipe da Gerência de Controle Interno Financeiro. O uso sistemático desta ferramenta promove a reciclagem de conhecimentos, o aperfeiçoamento das práticas analíticas e o fortalecimento da maturidade setorial.
+É importante destacar que a aplicação dos conhecimentos aqui apresentados será acompanhada de maneira atenta e contínua pela gestão, e o não cumprimento das orientações poderá acarretar responsabilização funcional, incluindo medidas corretivas previstas nos normativos internos.
+Dessa forma, espera-se que este instrumento contribua para maior eficiência, celeridade e mitigação de riscos na elaboração dos relatórios de conformidade, fortalecendo o papel da GCIF como segunda linha de defesa no Sistema de Gestão de Riscos da EMSERH.
+REFERÊNCIAS
+BRASIL. Lei n.º 13.303, de 30 de junho de 2016. Dispõe sobre o estatuto jurídico da empresa pública, da sociedade de economia mista e de suas subsidiárias, no âmbito da União, dos Estados, do Distrito Federal e dos Municípios. Disponível em: &lt;https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13303.htm&gt;.
+MARANHÃO. Parecer Normativo n.° 002/2017-ASS/PGE/MA, de 07 de fevereiro de 2017. Dispõe sobre elementos e providências a serem adotadas na instrução dos processos de pagamento por indenização, com vistas a proceder à orientação uniforme para os órgãos e entidades da administração pública estadual. Sugestão de concessão de efeito normativo, nos termos do inciso XXVI, do art. 4º da Lei Complementar n° 20/1994. Disponível em: &lt;https://www.diariooficial.ma.gov.br/acervo/&gt;.
+MARANHÃO. Portaria n.° 118, de 17 de abril de 2018 - GAB/EMSERH. Dispõe sobre a otimização do trâmite dos processos internos de pagamento de faturas dos serviços prestados em regime de monopólio, e sobre a delega- ção de poderes à Chefia de Gabinete/ EMSERH para a expedição dos competentes Ofícios. Disponível em:
+&lt;https://www.diariooficial.ma.gov.br/acervo/&gt;.
+21
+MARANHÃO. Portaria n.º 439, de 12 de setembro de 2024 – GAB/EMSERH. Dispõe sobre os documentos necessários para a instrução dos processos de pagamento de fornecedores e prestadores de serviço no âmbito da Empresa Maranhense de Serviços Hospitalares – EMSERH e dá outras providências. Disponível em:
+&lt;https://www.diariooficial.ma.gov.br/acervo/&gt;.
+MARANHÃO. Portaria n.° 279, de 16 de maio de 2025 - GAB/EMSERH. Altera a Portaria n.º 439 de 12/09/2024 – GAB/EMSERH, que dispõe sobre os documentos necessários para a instrução dos processos de pagamento de fornecedores e prestadores de serviço no âmbito da Empresa Maranhense de Serviços Hospitalares – EMSERH. Disponível em: &lt;https://www.diariooficial.ma.gov.br/acervo/&gt;
+MARANHÃO. Regulamento Interno de Licitações e Contratos da EMSERH, de 27 de maio de 2024. Estabelece as normas, os critérios e os procedimentos para a licitação e contratação de serviços, inclusive de engenharia e de publicidade, da aquisição e da locação de bens, da alienação de bens e de ativos integrantes do respectivo patrimônio ou da execução de obras a serem integradas a esse patrimônio, bem como a implementação de ônus real sobre tais bens, no âmbito da EMSERH, com fundamento no art. 40 da Lei n° 13.303 de 30 de junho de 2016. Disponível em:
+&lt;https://www.emserh.ma.gov.br/regulamento-de-licitacoes-e-contratos/&gt;.
+EMSERH, Empresa Maranhense De Serviços Hospitalares. Memorando Circular      n°000000
+n.° 07/2022 - DIR. FINANCEIRA/EMSERH. MARANHÃO, 13 de junho de 2022. Dispõe sobre a abertura de Processos de Pagamentos de Contratos com Subcontratação. Disponível em: &lt;http://intranet/arquivo/17230&amp;1fb96d71299fc4e97660fb3e6f17f300pdf/ MEMO%2007.pdf&gt;.
+EMSERH, Empresa Maranhense De Serviços Hospitalares. Memorando Circular n.º 17/2023 - GAB/EMSERH. MARANHÃO, 16 de junho de 2023. Dispõe sobre os procedimentos a serem adotados em processos de pagamento de empresas que detenham o monopólio de serviço público em casos de eventuais irregularidades em certidões fiscais no âmbito da EMSERH. Disponível em: &lt;http://intranet/arquivo/8820 4&amp;b48959bd540c6eec1917584fa32ccccfpdf/Memo.%20Circular%20n%C2%B0%2017.20 23%20-%20CCFPP%20-%20Altera%C3%A7%C3%A3o%20no%20modelo%20padr%C3 %A3o%20de%20Cronograma%20F%C3%ADsico%20Financeiro.pdf&gt;.
+2 2
+EMSERH, Empresa Maranhense De Serviços Hospitalares. Memorando Circular n.º 05/2024 - Comissão de Coordenação de Fluxo de Processos de Pagamento. Alteração do fluxo de pagamento dos processos da CAHOSP. MARANHÃO, 27 de março de 2024. Dispões sobre a alteração do fluxo de pagamento dos processos da CAHOSP. Disponível em: Sistema Eletrônico de Informações (SEI), processo n.° 2024.110215.09288.
+EMSERH, Empresa Maranhense De Serviços Hospitalares. Memorando Circular n.º 12/2024 – Comissão de Coordenação de Fluxo de Processos de Pagamento. MARANHÃO, 01 de julho de 2024. Dispõe sobre a Padronização de documentos e procedimentos referentes ao novo Fluxo de Processos de Pagamento de Empresas em Regime de Monopólio e Folha de Pagamento de Funcionários (em caso de terceirização de mão de obra). Disponível em: Sistema Eletrônico de Informações (SEI), processo n.° 2024.110215.21855.
+EMSERH, Empresa Maranhense De Serviços Hospitalares. Memorando Circular n.º 20/2024 - Comissão de Coordenação de Fluxo de Processos de Pagamento. MARANHÃO, 20 de dezembro de 2024. Dispõe sobre a aplicação do memorando inicial elaborado pelo fiscal do contrato para entrega realizada diretamente na CAHOSP e sobre o uso do Relatório de Fornecimento ou Prestação de Serviços. Disponível em:
+Sistema Eletrônico de Informações (SEI), processo n.° 2024.110215.42522.
+(98) 3235-7333
+www.
+emserh.ma.gov.b
+r
+Av. Borborema, 25, Qd 16, Calhau,
+São Luís/MA
+EMSERH
+Empresa Maranhense de Serviços Hospitalares
+Por uma saúde melhor
+(98) 3235-7333
+www.
+emserh.ma.gov.b
+r
+Av. Borborema, 25, Qd 16, Calhau,
+São Luís/MA
+EMSERH
+Empresa Maranhense de Serviços Hospitalares
+Por uma saúde melhor

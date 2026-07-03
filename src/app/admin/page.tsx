@@ -1,7 +1,6 @@
 import { getRulesStore, isPersistenceConfigured } from '@/lib/rules-store';
 import { Header } from '@/components/Header';
 import { AdminLogin } from '@/components/AdminLogin';
-import { AdminNav } from '@/components/AdminNav';
 import { RulesEditor } from '@/components/RulesEditor';
 import { isAdminAuthed } from '@/lib/admin-guard';
 
@@ -21,7 +20,6 @@ export default async function AdminPage() {
   return (
     <>
       <Header active="regras" />
-      <AdminNav active="regras" />
       <RulesEditor initialStore={store} persistent={isPersistenceConfigured()} />
     </>
   );
