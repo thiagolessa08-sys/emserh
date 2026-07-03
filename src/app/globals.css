@@ -366,6 +366,16 @@
   .user-empty { color: var(--em-muted); text-align: center; padding: 20px; }
   @media (max-width: 720px) { .user-form { grid-template-columns: 1fr; } }
 
+  /* ===== Estatísticas ===== */
+  .stat-day { border: 1px solid var(--line-2); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+  .stat-day-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--paper-soft); }
+  .stat-day-date { font-weight: 700; color: var(--emserh-navy); font-size: 13.5px; }
+  .stat-day-total { font-size: 12px; color: var(--em-muted); }
+  .stat-users { padding: 4px 16px 10px; }
+  .stat-user-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: var(--ink-2); border-bottom: 1px solid var(--line-2); }
+  .stat-user-row:last-child { border-bottom: 0; }
+  .stat-user-count { font-family: var(--font-jetbrains-mono, monospace); font-weight: 600; color: var(--ink); }
+
   /* ===== Login ===== */
   .login-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
   .login-card { width: 100%; max-width: 400px; }
