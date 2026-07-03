@@ -6,7 +6,7 @@ import { listUsers } from '@/lib/users-store';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  if (!(await isAdminAuthed())) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+  if (!(await isAdminAuthed('estatisticas'))) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   const [analytics, users] = await Promise.all([getAnalytics(), listUsers()]);
   const nomes: Record<string, string> = {};
   for (const u of users) nomes[u.username] = u.nome;

@@ -8,11 +8,11 @@ import { isAdminAuthed } from '@/lib/admin-guard';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
-  if (!(await isAdminAuthed())) {
+  if (!(await isAdminAuthed('regras'))) {
     return (
       <>
         <Header active="regras" />
-        <AdminLogin />
+        <AdminLogin area="regras" titulo="Regras" />
       </>
     );
   }

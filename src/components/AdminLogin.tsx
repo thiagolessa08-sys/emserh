@@ -3,7 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function AdminLogin() {
+interface AdminLoginProps {
+  area?: 'regras' | 'usuarios' | 'estatisticas';
+  titulo?: string;
+}
+
+export function AdminLogin({ area = 'regras', titulo = 'Administração' }: AdminLoginProps) {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +21,7 @@ export function AdminLogin() {
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senha }),
+      body: JSON.stringify({ area, senha }),
     });
     setLoading(false);
     if (res.ok) {
@@ -29,9 +34,9 @@ export function AdminLogin() {
   return (
     <main className="admin-login">
       <form className="card admin-login-card" onSubmit={submit}>
-        <div className="card-head"><div className="card-title">Administração de Regras</div></div>
+        <div className="card-head"><div className="card-title">{titulo}</div></div>
         <div className="card-body">
-          <label className="segment-label" htmlFor="senha">Senha de administrador</label>
+          <label className="segment-label" htmlFor="senha">Senha de acesso</label>
           <input
             id="senha"
             type="password"

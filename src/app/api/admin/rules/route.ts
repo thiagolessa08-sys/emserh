@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { verifyAuthToken } from '@/lib/admin-auth';
+import { isAdminAuthed } from '@/lib/admin-guard';
 import { getRulesStore, saveCombination, CombinationPayloadSchema } from '@/lib/rules-store';
 import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
 async function isAuthed(): Promise<boolean> {
-  const cookieStore = await cookies();
-  return verifyAuthToken(cookieStore.get('admin_auth')?.value);
+  return isAdminAuthed('regras');
 }
 
 export async function GET() {

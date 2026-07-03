@@ -7,8 +7,8 @@ import { isAdminAuthed } from '@/lib/admin-guard';
 export const dynamic = 'force-dynamic';
 
 export default async function EstatisticasPage() {
-  if (!(await isAdminAuthed())) {
-    return (<><Header active="regras" /><AdminLogin /></>);
+  if (!(await isAdminAuthed('estatisticas'))) {
+    return (<><Header active="regras" /><AdminLogin area="estatisticas" titulo="Estatísticas" /></>);
   }
   return (
     <>
