@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { logger } from '@/lib/logger';
+import { verifySession } from '@/lib/session';
+import { incrementCount } from '@/lib/analytics-store';
 import type { ExtractedPage } from '@/lib/pdf-native-extractor';
 import type { AnnotationRequest } from '@/lib/pdf-annotator';
 
@@ -40,6 +43,9 @@ export async function POST(request: Request) {
   const entries = formData.getAll('files') as File[];
   const segmento = (formData.get('segmento') as string | null) ?? 'fornecedor';
   const modalidade = (formData.get('modalidade') as string | null) ?? 'contrato';
+
+  const cookieStore = await cookies();
+  const username = await verifySession(cookieStore.get('session')?.value);
 
   if (!entries || entries.length === 0) {
     return NextResponse.json({ error: 'Nenhum arquivo enviado. Use o campo "files".' }, { status: 400 });
@@ -191,6 +197,11 @@ export async function POST(request: Request) {
             reportPdf: reportPdf.toString('base64'),
             annotatedPdf: annotatedPdf.toString('base64'),
           });
+
+          if (username) {
+            const hoje = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+            incrementCount(username, hoje).catch(() => { /* contador é secundário */ });
+          }
         }
 
         const totalMs = Date.now() - globalStart;
