@@ -444,6 +444,13 @@
   .reg-page .user-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--m-muted); padding: 8px 10px; border-bottom: 1px solid var(--m-line); }
   .reg-page .user-table td { padding: 11px 10px; border-bottom: 1px solid var(--m-line-2); color: var(--m-ink-2); }
   .reg-page .rule-remove { background: none; border: 0; color: var(--m-err); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+  .reg-page .reset-btn { background: none; border: 0; color: var(--m-navy); font-size: 11.5px; font-weight: 600; cursor: pointer; margin-right: 10px; }
+  .reg-page .reset-btn:hover { text-decoration: underline; }
+  .reg-page .reset-inline { display: inline-flex; align-items: center; gap: 8px; }
+  .reg-page .reset-input { font-size: 12.5px; padding: 6px 9px; border: 1px solid var(--m-line); border-radius: 7px; background: var(--m-paper-soft); width: 150px; }
+  .reg-page .reset-input:focus { outline: none; border-color: var(--m-blue); box-shadow: 0 0 0 3px rgba(63,169,213,0.12); }
+  .reg-page .reset-save { background: var(--m-navy); color: #fff; border: 0; padding: 6px 12px; border-radius: 7px; font-size: 11.5px; font-weight: 600; cursor: pointer; }
+  .reg-page .reset-msg { font-size: 11px; color: var(--m-err); }
   .reg-page .user-empty { color: var(--m-muted); text-align: center; padding: 18px; }
   @media (max-width: 980px) { .reg-grid { grid-template-columns: 1fr; } .reg-page .fieldset, .reg-page .roles { grid-template-columns: 1fr; } }
 

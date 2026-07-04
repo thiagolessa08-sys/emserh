@@ -42,6 +42,9 @@ export function UsersManager() {
   const [ok, setOk] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<UserRow[]>([]);
+  const [resetEmail, setResetEmail] = useState<string | null>(null);
+  const [resetSenha, setResetSenha] = useState('');
+  const [resetMsg, setResetMsg] = useState<string | null>(null);
 
   async function carregar() {
     const res = await fetch('/api/admin/users');
@@ -96,6 +99,26 @@ export function UsersManager() {
   async function remover(em: string) {
     await fetch(`/api/admin/users?email=${encodeURIComponent(em)}`, { method: 'DELETE' });
     carregar();
+  }
+
+  function abrirReset(em: string) {
+    setResetEmail(em); setResetSenha(''); setResetMsg(null);
+  }
+
+  async function salvarReset(em: string) {
+    if (resetSenha.length < 4) { setResetMsg('Mínimo 4 caracteres.'); return; }
+    const res = await fetch('/api/admin/users', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: em, senha: resetSenha }),
+    });
+    if (res.ok) {
+      setResetEmail(null); setResetSenha('');
+      setOk(`Senha de ${em} redefinida com sucesso.`);
+      setTimeout(() => setOk(null), 3500);
+    } else {
+      setResetMsg('Falha ao redefinir a senha.');
+    }
   }
 
   return (
@@ -235,7 +258,25 @@ export function UsersManager() {
               {users.map((u) => (
                 <tr key={u.email}>
                   <td>{u.nome}</td><td>{u.email}</td><td>{u.unidade}</td><td>{u.role}</td>
-                  <td><button className="rule-remove" onClick={() => remover(u.email)}>Remover</button></td>
+                  <td style={{ whiteSpace: 'nowrap' }}>
+                    {resetEmail === u.email ? (
+                      <span className="reset-inline">
+                        <input
+                          type="password" className="reset-input" placeholder="Nova senha" autoFocus
+                          value={resetSenha} onChange={(e) => setResetSenha(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') salvarReset(u.email); }}
+                        />
+                        <button className="reset-save" onClick={() => salvarReset(u.email)}>Salvar</button>
+                        <button className="rule-remove" onClick={() => setResetEmail(null)}>Cancelar</button>
+                        {resetMsg && <span className="reset-msg">{resetMsg}</span>}
+                      </span>
+                    ) : (
+                      <>
+                        <button className="reset-btn" onClick={() => abrirReset(u.email)}>Redefinir senha</button>
+                        <button className="rule-remove" onClick={() => remover(u.email)}>Remover</button>
+                      </>
+                    )}
+                  </td>
                 </tr>
               ))}
               {users.length === 0 && <tr><td colSpan={5} className="user-empty">Nenhum usuário cadastrado.</td></tr>}

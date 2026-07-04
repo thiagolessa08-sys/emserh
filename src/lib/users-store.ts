@@ -34,6 +34,11 @@ export const CreateUserSchema = z.object({
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 
+export const ResetPasswordSchema = z.object({
+  email: z.string().email(),
+  senha: z.string().min(4),
+});
+
 function getUsersPath(): string {
   if (process.env.USERS_STORE_PATH) return process.env.USERS_STORE_PATH;
   const base = process.env.RULES_STORE_PATH
@@ -108,6 +113,15 @@ export async function createUser(input: CreateUserInput): Promise<void> {
       createdAt: new Date().toISOString(),
     },
   ]);
+}
+
+export async function setPassword(email: string, senha: string): Promise<void> {
+  const users = await readUsers();
+  const target = email.toLowerCase();
+  const idx = users.findIndex((u) => u.email.toLowerCase() === target);
+  if (idx === -1) throw new Error('NOT_FOUND');
+  const hash = hashPassword(senha);
+  await writeUsers(users.map((u, i) => (i === idx ? { ...u, passwordHash: hash } : u)));
 }
 
 export async function deleteUser(email: string): Promise<void> {

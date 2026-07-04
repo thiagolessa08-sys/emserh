@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import {
-  hashPassword, verifyPassword, createUser, listUsers, deleteUser, verifyLogin,
+  hashPassword, verifyPassword, createUser, listUsers, deleteUser, verifyLogin, setPassword,
   resetUsersCache, CreateUserSchema,
 } from '@/lib/users-store';
 
@@ -76,6 +76,19 @@ describe('verifyLogin (por email)', () => {
     expect(await verifyLogin('joao@emserh.ma.gov.br', 'senha123')).toEqual({ email: 'joao@emserh.ma.gov.br', nome: 'João Silva' });
     expect(await verifyLogin('joao@emserh.ma.gov.br', 'errada')).toBeNull();
     expect(await verifyLogin('naoexiste@x.com', 'x')).toBeNull();
+  });
+});
+
+describe('setPassword', () => {
+  it('redefine a senha de um usuário existente', async () => {
+    await createUser(base);
+    await setPassword(base.email, 'novasenha');
+    expect(await verifyLogin(base.email, 'novasenha')).toEqual({ email: base.email, nome: base.nome });
+    expect(await verifyLogin(base.email, base.senha)).toBeNull();
+  });
+
+  it('lança NOT_FOUND para email inexistente', async () => {
+    await expect(setPassword('naoexiste@x.com', 'y1234')).rejects.toThrow('NOT_FOUND');
   });
 });
 
