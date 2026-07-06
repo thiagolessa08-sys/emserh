@@ -109,7 +109,7 @@ export function AnalyticsDashboard() {
 
   // Gráfico de barras (SVG)
   const chart = useMemo(() => {
-    const W = 760, H = 300, padL = 34, padB = 26, padT = 8;
+    const W = 760, H = 460, padL = 34, padB = 26, padT = 8;
     const n = data.perDay.length;
     const maxV = Math.max(10, ...data.perDay.map((d) => d.good + d.bad));
     const niceMax = Math.ceil(maxV / 10) * 10;
