@@ -54,7 +54,7 @@ const MOCK_RESULT = {
 };
 
 vi.mock('@/lib/claude-analyzer', () => ({
-  analyzeProcess: vi.fn(async () => MOCK_RESULT),
+  analyzeProcess: vi.fn(async () => ({ analysis: MOCK_RESULT, focusedText: 'texto usado na analise' })),
 }));
 
 vi.mock('@/lib/report-generator', () => ({
