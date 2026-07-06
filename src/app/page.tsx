@@ -32,6 +32,7 @@ function stageState(step: AnalysisStage, current: AnalysisStage): 'done' | 'acti
 interface AnalysisResultEntry {
   filename: string;
   analysis: AnalysisResult;
+  focusedText: string;
   reportPdfBase64: string;
   annotatedPdfBase64: string;
 }
@@ -43,6 +44,7 @@ type SSEEvent =
       results: Array<{
         filename: string;
         analysis: AnalysisResult;
+        focusedText: string;
         reportPdf: string;
         annotatedPdf: string;
       }>;
@@ -230,6 +232,7 @@ export default function Home() {
               event.results.map((r) => ({
                 filename: r.filename,
                 analysis: r.analysis,
+                focusedText: r.focusedText,
                 reportPdfBase64: r.reportPdf,
                 annotatedPdfBase64: r.annotatedPdf,
               })),
@@ -484,6 +487,9 @@ export default function Home() {
               key={r.filename}
               filename={r.filename}
               analysis={r.analysis}
+              focusedText={r.focusedText}
+              segmento={(segmento || 'fornecedor') as SegmentoId}
+              modalidade={modalidade}
               reportPdfBase64={r.reportPdfBase64}
               annotatedPdfBase64={r.annotatedPdfBase64}
             />

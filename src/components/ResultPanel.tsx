@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AnalysisResult, ChecklistItemStatus, RegularidadeItem, InstrucaoItem } from '@/lib/types';
+import type { AnalysisResult, ChecklistItemStatus, RegularidadeItem, InstrucaoItem, SegmentoId, Modalidade } from '@/lib/types';
 import { recomputeConclusao, type Dispensa, type Secao } from '@/lib/dispensation';
 
 function downloadBase64(base64: string, filename: string) {
@@ -77,16 +77,24 @@ function FindingRow({ item, secao, dataValidade, dispensas, onDispensar, onDesfa
 interface ResultPanelProps {
   filename: string;
   analysis: AnalysisResult;
+  focusedText: string;
+  segmento: SegmentoId;
+  modalidade: Modalidade;
   reportPdfBase64: string;
   annotatedPdfBase64: string;
 }
 
-export function ResultPanel({ filename, analysis, reportPdfBase64, annotatedPdfBase64 }: ResultPanelProps) {
+export function ResultPanel({ filename, analysis: analysisProp, focusedText, segmento, modalidade, reportPdfBase64, annotatedPdfBase64 }: ResultPanelProps) {
+  const [analysis, setAnalysis] = useState<AnalysisResult>(analysisProp);
   const { identificacao_contrato: id, conclusao } = analysis;
   const [dispensas, setDispensas] = useState<Dispensa[]>([]);
   const [auditorNome, setAuditorNome] = useState('');
   const [gerando, setGerando] = useState(false);
   const [erroPdf, setErroPdf] = useState<string | null>(null);
+  const [regraExtra, setRegraExtra] = useState<string | null>(null);
+  const [regraInput, setRegraInput] = useState('');
+  const [reanalisando, setReanalisando] = useState(false);
+  const [erroRe, setErroRe] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/auth/me').then((r) => r.json()).then((d) => setAuditorNome(d?.user?.nome ?? '')).catch(() => {});
@@ -101,8 +109,30 @@ export function ResultPanel({ filename, analysis, reportPdfBase64, annotatedPdfB
     setDispensas((prev) => prev.filter((d) => !(d.secao === secao && d.item === item)));
   }
 
+  async function reanalisar() {
+    if (regraInput.trim().length === 0 || !focusedText) return;
+    setReanalisando(true); setErroRe(null);
+    try {
+      const res = await fetch('/api/reanalyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ focusedText, segmento, modalidade, regraExtra: regraInput.trim() }),
+      });
+      if (!res.ok) throw new Error('falha');
+      const { analysis: nova } = await res.json();
+      setAnalysis(nova);
+      setRegraExtra(regraInput.trim());
+      setRegraInput('');
+      setDispensas([]);
+    } catch {
+      setErroRe('Falha ao reanalisar, tente novamente.');
+    } finally {
+      setReanalisando(false);
+    }
+  }
+
   async function baixarRelatorio() {
-    if (dispensas.length === 0) {
+    if (dispensas.length === 0 && !regraExtra) {
       downloadBase64(reportPdfBase64, `relatorio-conformidade-${filename}`);
       return;
     }
@@ -111,7 +141,7 @@ export function ResultPanel({ filename, analysis, reportPdfBase64, annotatedPdfB
       const res = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ analysis, dispensas }),
+        body: JSON.stringify({ analysis, dispensas, regraExtra: regraExtra ?? undefined }),
       });
       if (!res.ok) throw new Error('falha');
       const { reportPdf } = await res.json();
@@ -161,6 +191,23 @@ export function ResultPanel({ filename, analysis, reportPdfBase64, annotatedPdfB
             <FindingRow key={`inst-${it.item}`} item={it} secao="inst" dispensas={dispensas} onDispensar={dispensar} onDesfazer={desfazer} />
           ))}
         </div>
+
+        {focusedText && (
+          <div className="reanalise-box">
+            <div className="reanalise-title">Adicionar regra específica e reanalisar</div>
+            {regraExtra && <p className="reanalise-aplicada">Regra aplicada nesta análise: <strong>{regraExtra}</strong></p>}
+            <textarea
+              className="reanalise-input"
+              placeholder="Ex.: verificar se há autorização do gestor da unidade assinada; ou: o documento X não é necessário neste caso"
+              value={regraInput}
+              onChange={(e) => setRegraInput(e.target.value)}
+            />
+            {erroRe && <p className="admin-error">{erroRe}</p>}
+            <button className="reanalise-btn" onClick={reanalisar} disabled={reanalisando || regraInput.trim().length === 0}>
+              {reanalisando ? 'Reanalisando...' : 'Reanalisar com esta regra'}
+            </button>
+          </div>
+        )}
 
         {erroPdf && <p className="admin-error" style={{ marginTop: 12 }}>{erroPdf}</p>}
 
