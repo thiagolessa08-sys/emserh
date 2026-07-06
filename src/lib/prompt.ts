@@ -40,7 +40,7 @@ function formatItems(items: ChecklistItem[]): string {
     .join('\n\n');
 }
 
-export function buildSystemPrompt(checklist: SegmentChecklist, segmento: SegmentoId, modalidade: Modalidade): string {
+export function buildSystemPrompt(checklist: SegmentChecklist, segmento: SegmentoId, modalidade: Modalidade, regraExtra?: string): string {
   const segLabel = getSegmentLabel(segmento);
   const modLabel = modalidade === 'contrato' ? 'Contrato' : 'Indenizatório';
   const nReg = checklist.regularidade.length;
@@ -74,7 +74,12 @@ ${formatItems(checklist.regularidade)}
 CHECKLIST DE INSTRUÇÃO PROCESSUAL (${nInstr} itens):
 ${formatItems(checklist.instrucao)}
 
-INSTRUÇÕES DE ANÁLISE:
+${regraExtra && regraExtra.trim() ? `REGRA ADICIONAL ESPECÍFICA DESTA ANÁLISE (definida manualmente pelo auditor):
+"${regraExtra.trim()}"
+- Avalie o documento também segundo esta regra e inclua o resultado como um item adicional na Instrução Processual.
+- Se esta regra alterar uma exigência existente (ex.: dispensar um documento antes exigido), REAVALIE o item correspondente à luz dela.
+
+` : ''}INSTRUÇÕES DE ANÁLISE:
 1. Leia todo o texto extraído do PDF (incluindo páginas digitais e OCR de páginas escaneadas).
 2. Para cada item do checklist, determine o status com base nas evidências textuais encontradas.
 3. Para cada item, extraia a citação textual exata (campo "citacao") que fundamenta a decisão, indicando a página estimada.
