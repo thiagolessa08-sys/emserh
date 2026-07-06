@@ -144,10 +144,11 @@ export async function runAnalysisOnText(
   focusedText: string,
   segmento: SegmentoId,
   modalidade: Modalidade,
+  regraExtra?: string,
 ): Promise<AnalysisResult> {
   const store = await getRulesStore();
   const checklist = getSegmentChecklist(store, segmento, modalidade);
-  const systemPrompt = buildSystemPrompt(checklist, segmento, modalidade);
+  const systemPrompt = buildSystemPrompt(checklist, segmento, modalidade, regraExtra);
   const userPrompt = buildUserPrompt(focusedText, checklist);
   let lastError: Error | null = null;
 
@@ -210,7 +211,7 @@ export async function analyzeProcess(
   segmento: SegmentoId,
   modalidade: Modalidade,
   progress?: AnalyzeProgress,
-): Promise<AnalysisResult> {
+): Promise<{ analysis: AnalysisResult; focusedText: string }> {
   let relevantPages: number[] = [];
   try {
     progress?.onMessage?.('Triagem: localizando documentos nas páginas...');
@@ -230,5 +231,6 @@ export async function analyzeProcess(
   const qtd = relevantPages.length > 0 ? `${relevantPages.length} página(s) relevante(s)` : 'todo o documento';
   progress?.onMessage?.(`Analisando ${qtd} com IA...`);
 
-  return runAnalysisOnText(focusedText, segmento, modalidade);
+  const analysis = await runAnalysisOnText(focusedText, segmento, modalidade);
+  return { analysis, focusedText };
 }

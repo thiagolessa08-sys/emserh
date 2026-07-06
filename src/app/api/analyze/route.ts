@@ -146,9 +146,9 @@ export async function POST(request: Request) {
             try { controller.enqueue(encoder.encode(': ping\n\n')); } catch { /* stream fechado */ }
           }, 20_000);
 
-          let analysis: Awaited<ReturnType<typeof analyzeProcess>>;
+          let out: Awaited<ReturnType<typeof analyzeProcess>>;
           try {
-            analysis = await analyzeProcess(
+            out = await analyzeProcess(
               extracted.pages,
               segmento as import('@/lib/types').SegmentoId,
               modalidade as import('@/lib/types').Modalidade,
@@ -165,6 +165,7 @@ export async function POST(request: Request) {
           } finally {
             clearInterval(keepalive);
           }
+          const analysis = out.analysis;
           const analyzeMs = Date.now() - t1;
 
           logger.info(
@@ -203,6 +204,7 @@ export async function POST(request: Request) {
           results.push({
             filename: file.name,
             analysis,
+            focusedText: out.focusedText,
             reportPdf: reportPdf.toString('base64'),
             annotatedPdf: annotatedPdf.toString('base64'),
           });
