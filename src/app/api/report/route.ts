@@ -17,6 +17,7 @@ const DispensaSchema = z.object({
 const BodySchema = z.object({
   analysis: AnalysisResultSchema,
   dispensas: z.array(DispensaSchema),
+  regraExtra: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
   }
   try {
-    const pdf = await generateConformityReport(parsed.data.analysis, parsed.data.dispensas);
+    const pdf = await generateConformityReport(parsed.data.analysis, parsed.data.dispensas, parsed.data.regraExtra);
     return NextResponse.json({ reportPdf: pdf.toString('base64') });
   } catch (err) {
     logger.error({ err: err instanceof Error ? err.message : String(err) }, 'report_regen_failed');

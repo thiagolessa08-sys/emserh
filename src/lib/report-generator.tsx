@@ -132,7 +132,7 @@ function ChecklistSection({
   );
 }
 
-function ConformityDocument({ analysis, dispensas }: { analysis: AnalysisResult; dispensas: Dispensa[] }) {
+function ConformityDocument({ analysis, dispensas, regraExtra }: { analysis: AnalysisResult; dispensas: Dispensa[]; regraExtra?: string }) {
   const { identificacao_contrato: id, regularidade_fiscal_trabalhista: reg, instrucao_processual: inst, conclusao } = analysis;
   const recalc = recomputeConclusao(analysis, dispensas);
   const decisaoColor = DECISAO_COLOR[recalc.decisao] ?? '#555';
@@ -167,6 +167,13 @@ function ConformityDocument({ analysis, dispensas }: { analysis: AnalysisResult;
           </View>
         </View>
 
+        {regraExtra && regraExtra.trim() && (
+          <View style={{ marginTop: 8, padding: 8, borderWidth: 1, borderColor: '#1e3a5f', borderRadius: 4 }}>
+            <Text style={{ fontSize: 8.5, fontWeight: 'bold', color: '#1e3a5f' }}>REGRA ADICIONAL APLICADA NESTA ANÁLISE</Text>
+            <Text style={{ fontSize: 8, color: '#333', marginTop: 2 }}>{regraExtra.trim()}</Text>
+          </View>
+        )}
+
         {dispensas.length > 0 && (
           <View>
             <Text style={s.sectionTitle}>4. EXCEÇÕES APLICADAS NESTA ANÁLISE</Text>
@@ -189,7 +196,7 @@ function ConformityDocument({ analysis, dispensas }: { analysis: AnalysisResult;
   );
 }
 
-export async function generateConformityReport(analysis: AnalysisResult, dispensas: Dispensa[] = []): Promise<Buffer> {
-  const uint8 = await renderToBuffer(<ConformityDocument analysis={analysis} dispensas={dispensas} />);
+export async function generateConformityReport(analysis: AnalysisResult, dispensas: Dispensa[] = [], regraExtra?: string): Promise<Buffer> {
+  const uint8 = await renderToBuffer(<ConformityDocument analysis={analysis} dispensas={dispensas} regraExtra={regraExtra} />);
   return Buffer.from(uint8);
 }
