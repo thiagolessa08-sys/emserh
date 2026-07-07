@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface Ev { username: string; ts: string; conforme: boolean; durationMs: number; }
 interface Usr { email: string; nome: string; unidade: string; role: string; }
@@ -37,6 +37,19 @@ export function AnalyticsDashboard() {
       .then((r) => r.json())
       .then((d) => { setEvents(d.events ?? []); setUsers(d.users ?? []); setCarregado(true); })
       .catch(() => setCarregado(true));
+  }, []);
+
+  // Mede o container do gráfico para desenhá-lo no tamanho real (preenche o card sem distorção)
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [dims, setDims] = useState({ w: 700, h: 360 });
+  useEffect(() => {
+    const el = chartRef.current;
+    if (!el) return;
+    const update = () => setDims({ w: el.clientWidth, h: el.clientHeight });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   const data = useMemo(() => {
@@ -109,7 +122,7 @@ export function AnalyticsDashboard() {
 
   // Gráfico de barras (SVG)
   const chart = useMemo(() => {
-    const W = 760, H = 460, padL = 34, padB = 26, padT = 8;
+    const W = dims.w || 700, H = dims.h || 360, padL = 34, padB = 26, padT = 8;
     const n = data.perDay.length;
     const maxV = Math.max(10, ...data.perDay.map((d) => d.good + d.bad));
     const niceMax = Math.ceil(maxV / 10) * 10;
@@ -181,7 +194,7 @@ export function AnalyticsDashboard() {
       </div>
 
       <div className="prod-grid">
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head-p">
             <div><div className="ct">Documentos gerados por dia</div><div className="cs">Últimos {days} dias · conformes e com apontamentos</div></div>
             <div className="legend">
@@ -189,28 +202,30 @@ export function AnalyticsDashboard() {
               <span><span className="sw" style={{ background: 'var(--m-green)' }} /> Com apontamentos</span>
             </div>
           </div>
-          <div className="card-body-p">
-            {!carregado && <p className="prod-empty">Carregando...</p>}
-            {carregado && data.total === 0 && <p className="prod-empty">Nenhuma análise registrada no período.</p>}
-            {carregado && data.total > 0 && (
-              <svg viewBox={`0 0 ${chart.W} ${chart.H}`} className="chart-svg" preserveAspectRatio="xMidYMid meet">
-                {chart.grid.map((g, i) => (
-                  <g key={i}>
-                    <line x1={chart.padL} y1={g.y} x2={chart.W} y2={g.y} stroke="var(--m-line-2)" strokeWidth={1} />
-                    <text x={chart.padL - 8} y={g.y + 3} textAnchor="end" fontSize={10.5} fill="var(--m-muted-2)" fontFamily="var(--font-jetbrains-mono), monospace">{g.val}</text>
-                  </g>
-                ))}
-                {chart.bars.map((b, i) => (
-                  <g key={i}>
-                    <rect x={b.x} y={b.goodY} width={b.barW} height={b.goodH} rx={2} fill="var(--m-navy)" />
-                    <rect x={b.x} y={b.badY} width={b.barW} height={b.badH} rx={2} fill="var(--m-green)" />
-                    {(chart.n <= 14 || i % 3 === 0) && (
-                      <text x={b.x + b.barW / 2} y={chart.H - 8} textAnchor="middle" fontSize={10} fill="var(--m-muted)">{b.label}</text>
-                    )}
-                  </g>
-                ))}
-              </svg>
-            )}
+          <div className="card-body-p chart-body">
+            <div className="chart-area" ref={chartRef}>
+              {!carregado && <p className="prod-empty">Carregando...</p>}
+              {carregado && data.total === 0 && <p className="prod-empty">Nenhuma análise registrada no período.</p>}
+              {carregado && data.total > 0 && (
+                <svg viewBox={`0 0 ${chart.W} ${chart.H}`} className="chart-svg" preserveAspectRatio="none">
+                  {chart.grid.map((g, i) => (
+                    <g key={i}>
+                      <line x1={chart.padL} y1={g.y} x2={chart.W} y2={g.y} stroke="var(--m-line-2)" strokeWidth={1} />
+                      <text x={chart.padL - 8} y={g.y + 3} textAnchor="end" fontSize={10.5} fill="var(--m-muted-2)" fontFamily="var(--font-jetbrains-mono), monospace">{g.val}</text>
+                    </g>
+                  ))}
+                  {chart.bars.map((b, i) => (
+                    <g key={i}>
+                      <rect x={b.x} y={b.goodY} width={b.barW} height={b.goodH} rx={2} fill="var(--m-navy)" />
+                      <rect x={b.x} y={b.badY} width={b.barW} height={b.badH} rx={2} fill="var(--m-green)" />
+                      {(chart.n <= 14 || i % 3 === 0) && (
+                        <text x={b.x + b.barW / 2} y={chart.H - 8} textAnchor="middle" fontSize={10} fill="var(--m-muted)">{b.label}</text>
+                      )}
+                    </g>
+                  ))}
+                </svg>
+              )}
+            </div>
           </div>
         </div>
 
