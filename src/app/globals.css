@@ -499,10 +499,10 @@
   .kpi-val { font-family: var(--font-instrument-serif), serif; font-size: 40px; line-height: 1; color: var(--m-ink); margin: 16px 0 4px; }
   .kpi-label { font-size: 12.5px; color: var(--m-muted); font-weight: 500; }
   .prod-grid { display: grid; grid-template-columns: 1fr 400px; gap: 22px; align-items: stretch; }
-  .chart-card { display: flex; flex-direction: column; }
-  .chart-card .chart-body { flex: 1; display: flex; flex-direction: column; }
-  .chart-area { flex: 1; min-height: 260px; display: flex; }
-  .chart-area .prod-empty { margin: auto; }
+  .chart-card { display: flex; flex-direction: column; height: 100%; }
+  .chart-card .chart-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .chart-area { flex: 1; min-height: 260px; position: relative; }
+  .chart-area .prod-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin: 0; }
   .prod-page .card { background: var(--m-paper); border: 1px solid var(--m-line); border-radius: 14px; overflow: hidden; }
   .card-head-p { padding: 20px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
   .card-head-p .ct { font-size: 15px; font-weight: 600; color: var(--m-ink); }
@@ -511,7 +511,7 @@
   .prod-page .legend { display: flex; gap: 16px; }
   .prod-page .legend span { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--m-muted); font-weight: 500; }
   .prod-page .legend .sw { width: 10px; height: 10px; border-radius: 3px; }
-  .chart-svg { width: 100%; height: 100%; display: block; }
+  .chart-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .prod-side { display: flex; flex-direction: column; gap: 22px; }
   .rank-list { display: flex; flex-direction: column; }
   .rank-row { display: grid; grid-template-columns: 24px 34px 1fr auto; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--m-line-2); }
